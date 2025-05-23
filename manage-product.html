@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Produk Kopi</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="panel-header">
+        <div class="panel-title">Manajemen Produk Kopi</div>
+    </div>
+    <div class="panel-body">
+        <div class="tabs">
+            <button class="tab-btn active" data-target="all-products">Semua Produk</button>
+            <button class="tab-btn" data-target="low-stock-products">Stok Rendah</button>
+            <button class="tab-btn" data-target="active-products">Produk Aktif</button>
+            <button class="tab-btn" data-target="inactive-products">Produk Tidak Aktif</button>
+        </div>
+
+        <div class="search-filter">
+            <input type="text" class="form-control" placeholder="Cari produk..." id="product-search">
+            <select class="form-control" id="product-filter">
+                <option value="">Semua Kategori</option>
+                <option value="arabica">Arabica</option>
+                <option value="robusta">Robusta</option>
+                <option value="blend">Blend</option>
+                <option value="single-origin">Single Origin</option>
+            </select>
+            <button class="btn btn-secondary">Cari</button>
+            <button class="btn btn-primary" id="add-product-btn">Tambah Produk</button>
+        </div>
+
+        <!-- All Products Tab -->
+        <div class="tab-content active" id="all-products">
+            <div class="table-container">
+                <table class="data-table" id="products-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Produk</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Harga</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>KP001</td>
+                            <td>Arabica Gayo</td>
+                            <td>Arabica</td>
+                            <td>120 kg</td>
+                            <td>Rp 150.000</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP001">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP001">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-product" data-id="KP001">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP002</td>
+                            <td>Robusta Lampung</td>
+                            <td>Robusta</td>
+                            <td>85 kg</td>
+                            <td>Rp 120.000</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP002">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP002">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-product" data-id="KP002">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP003</td>
+                            <td>Blend Signature</td>
+                            <td>Blend</td>
+                            <td>50 kg</td>
+                            <td>Rp 180.000</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP003">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP003">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-product" data-id="KP003">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP004</td>
+                            <td>Toraja Sapan</td>
+                            <td>Single Origin</td>
+                            <td>30 kg</td>
+                            <td>Rp 220.000</td>
+                            <td><span class="badge badge-warning">Stok Rendah</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP004">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP004">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-product" data-id="KP004">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP005</td>
+                            <td>Kopi Aceh</td>
+                            <td>Arabica</td>
+                            <td>75 kg</td>
+                            <td>Rp 165.000</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP005">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP005">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-product" data-id="KP005">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP006</td>
+                            <td>Java Preanger</td>
+                            <td>Arabica</td>
+                            <td>0 kg</td>
+                            <td>Rp 190.000</td>
+                            <td><span class="badge badge-danger">Tidak Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP006">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP006">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-product" data-id="KP006">Hapus</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Low Stock Products Tab -->
+        <div class="tab-content" id="low-stock-products">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Produk</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Harga</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>KP004</td>
+                            <td>Toraja Sapan</td>
+                            <td>Single Origin</td>
+                            <td>30 kg</td>
+                            <td>Rp 220.000</td>
+                            <td class="actions">
+                                <button class="btn btn-primary btn-sm restock-product" data-id="KP004">Restok</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP004">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP007</td>
+                            <td>Mandheling Sumatra</td>
+                            <td>Arabica</td>
+                            <td>15 kg</td>
+                            <td>Rp 175.000</td>
+                            <td class="actions">
+                                <button class="btn btn-primary btn-sm restock-product" data-id="KP007">Restok</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP007">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Active Products Tab -->
+        <div class="tab-content" id="active-products">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Produk</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Harga</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>KP001</td>
+                            <td>Arabica Gayo</td>
+                            <td>Arabica</td>
+                            <td>120 kg</td>
+                            <td>Rp 150.000</td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP001">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP001">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP002</td>
+                            <td>Robusta Lampung</td>
+                            <td>Robusta</td>
+                            <td>85 kg</td>
+                            <td>Rp 120.000</td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP002">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP002">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP003</td>
+                            <td>Blend Signature</td>
+                            <td>Blend</td>
+                            <td>50 kg</td>
+                            <td>Rp 180.000</td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP003">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP003">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP005</td>
+                            <td>Kopi Aceh</td>
+                            <td>Arabica</td>
+                            <td>75 kg</td>
+                            <td>Rp 165.000</td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-product" data-id="KP005">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP005">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Inactive Products Tab -->
+        <div class="tab-content" id="inactive-products">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Produk</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Harga</th>
+                            <th>Alasan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>KP006</td>
+                            <td>Java Preanger</td>
+                            <td>Arabica</td>
+                            <td>0 kg</td>
+                            <td>Rp 190.000</td>
+                            <td>Stok habis</td>
+                            <td class="actions">
+                                <button class="btn btn-success btn-sm activate-product" data-id="KP006">Aktivasi</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP006">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>KP008</td>
+                            <td>Bali Kintamani</td>
+                            <td>Arabica</td>
+                            <td>25 kg</td>
+                            <td>Rp 200.000</td>
+                            <td>Tidak laku</td>
+                            <td class="actions">
+                                <button class="btn btn-success btn-sm activate-product" data-id="KP008">Aktivasi</button>
+                                <button class="btn btn-secondary btn-sm edit-product" data-id="KP008">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Product Modal -->
+    <div class="modal-backdrop" id="view-product-modal-backdrop">
+        <div class="modal" id="view-product-modal">
+            <div class="modal-header">
+                <div class="modal-title">Detail Produk</div>
+                <button class="modal-close" id="close-view-product-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="product-details">
+                    <div class="detail-item">
+                        <strong>ID Produk:</strong>
+                        <span id="detail-product-id">KP001</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Nama Produk:</strong>
+                        <span id="detail-product-name">Arabica Gayo</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Kategori:</strong>
+                        <span id="detail-product-category">Arabica</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Stok:</strong>
+                        <span id="detail-product-stock">120 kg</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Harga:</strong>
+                        <span id="detail-product-price">Rp 150.000</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Status:</strong>
+                        <span id="detail-product-status" class="badge badge-success">Aktif</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Deskripsi:</strong>
+                        <span id="detail-product-description">Kopi arabica premium dari dataran tinggi Gayo, Aceh. Memiliki cita rasa yang khas dengan aroma yang harum dan rasa yang balance.</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Tanggal Ditambahkan:</strong>
+                        <span id="detail-product-date">15 Mei 2025</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="close-product-details">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal-backdrop" id="product-modal-backdrop">
+        <div class="modal" id="product-modal">
+            <div class="modal-header">
+                <div class="modal-title" id="product-modal-title">Tambah Produk</div>
+                <button class="modal-close" id="close-product-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <div class="form-group">
+                        <label class="form-label">ID Produk</label>
+                        <input type="text" class="form-control" id="product-id" placeholder="Otomatis" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nama Produk</label>
+                        <input type="text" class="form-control" id="product-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kategori</label>
+                        <select class="form-control" id="product-category" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="arabica">Arabica</option>
+                            <option value="robusta">Robusta</option>
+                            <option value="blend">Blend</option>
+                            <option value="single-origin">Single Origin</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Stok (kg)</label>
+                                <input type="number" class="form-control" id="product-stock" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Harga (Rp)</label>
+                                <input type="number" class="form-control" id="product-price" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi Produk</label>
+                        <textarea class="form-control" id="product-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-control" id="product-status">
+                            <option value="active">Aktif</option>
+                            <option value="inactive">Tidak Aktif</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-product">Batal</button>
+                <button class="btn btn-primary" id="save-product">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin/produk.js"></script>
+    <script src="js/admin/admin.js"></script>
+</body>
+</html>
