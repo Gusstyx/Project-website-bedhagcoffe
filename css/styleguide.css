@@ -1,0 +1,40 @@
+:root {
+    /* Primary font set */
+    --font-primary: "Jost", Helvetica, sans-serif;
+    --font-secondary: "Irish Grover", Helvetica, sans-serif;
+  
+    /* Poppins variants */
+    --font-poppins-regular: "Poppins", Helvetica, sans-serif;
+    --font-poppins-light: "Poppins", Helvetica, sans-serif;
+    --font-poppins-medium: "Poppins", Helvetica, sans-serif;
+    --font-poppins-semibold: "Poppins", Helvetica, sans-serif;
+    --font-poppins-bold: "Poppins", Helvetica, sans-serif;
+  
+    /* Times New Roman set */
+    --font-times-regular: "Times New Roman", Helvetica, serif;
+  
+    /* Font weights */
+    --weight-light: 300;
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+  
+    /* Font sizes */
+    --size-small: 12px;
+    --size-regular: 14px;
+    --size-medium: 16px;
+    --size-large: 18px;
+    --size-xl: 24px;
+    --size-xxl: 60px;
+  
+    /* Line heights */
+    --line-normal: normal;
+    --line-medium: 22.75px;
+    --line-large: 36px;
+    --line-xl: 72px;
+  
+    /* Other common variables */
+    --letter-spacing-none: 0px;
+  }
+  

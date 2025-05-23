@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Mitra Bisnis</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="panel-header">
+        <div class="panel-title">Manajemen Akun Mitra Bisnis</div>
+    </div>
+    <div class="panel-body">
+        <div class="tabs">
+            <button class="tab-btn active" data-target="all-partners">Semua Mitra</button>
+            <button class="tab-btn" data-target="pending-partners">Menunggu Persetujuan</button>
+            <button class="tab-btn" data-target="active-partners">Mitra Aktif</button>
+            <button class="tab-btn" data-target="inactive-partners">Mitra Tidak Aktif</button>
+        </div>
+
+        <div class="search-filter">
+            <input type="text" class="form-control" placeholder="Cari mitra..." id="partner-search">
+            <button class="btn btn-secondary">Cari</button>
+        </div>
+
+        <!-- All Partners Tab -->
+        <div class="tab-content active" id="all-partners">
+            <div class="table-container">
+                <table class="data-table" id="partners-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Mitra</th>
+                            <th>Email</th>
+                            <th>Telepon</th>
+                            <th>Tanggal Daftar</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MB001</td>
+                            <td>Kopi Nusantara</td>
+                            <td>info@kopinusantara.com</td>
+                            <td>081234567890</td>
+                            <td>15 Mei 2025</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-partner" data-id="MB001">Lihat</button>
+                                <button class="btn btn-danger btn-sm delete-partner" data-id="MB001">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MB002</td>
+                            <td>Java Bean</td>
+                            <td>contact@javabean.id</td>
+                            <td>087654321098</td>
+                            <td>10 Mei 2025</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-partner" data-id="MB002">Lihat</button>
+                                <button class="btn btn-secondary btn-sm view-contract" data-id="MB002">Kontrak</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MB006</td>
+                            <td>Bali Coffee House</td>
+                            <td>info@balicoffeehouse.com</td>
+                            <td>081987654321</td>
+                            <td>12 Mei 2025</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-partner" data-id="MB006">Lihat</button>
+                                <button class="btn btn-secondary btn-sm view-contract" data-id="MB006">Kontrak</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Inactive Partners Tab -->
+        <div class="tab-content" id="inactive-partners">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Mitra</th>
+                            <th>Email</th>
+                            <th>Telepon</th>
+                            <th>Tanggal Daftar</th>
+                            <th>Alasan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MB004</td>
+                            <td>Bean Lovers</td>
+                            <td>hello@beanlovers.com</td>
+                            <td>089988776655</td>
+                            <td>05 Mei 2025</td>
+                            <td>Kontrak berakhir</td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-partner" data-id="MB004">Lihat</button>
+                                <button class="btn btn-success btn-sm reactivate-partner" data-id="MB004">Aktivasi Ulang</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MB008</td>
+                            <td>Papua Highland Coffee</td>
+                            <td>info@papuacoffee.id</td>
+                            <td>081456789012</td>
+                            <td>01 Mei 2025</td>
+                            <td>Pelanggaran kontrak</td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-partner" data-id="MB008">Lihat</button>
+                                <button class="btn btn-success btn-sm reactivate-partner" data-id="MB008">Aktivasi Ulang</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Partner Modal -->
+    <div class="modal-backdrop" id="partner-modal-backdrop">
+        <div class="modal" id="partner-modal">
+            <div class="modal-header">
+                <div class="modal-title" id="partner-modal-title">Detail Mitra Bisnis</div>
+                <button class="modal-close" id="close-partner-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="partner-details">
+                    <div class="detail-item">
+                        <strong>ID Mitra:</strong>
+                        <span id="detail-partner-id">MB001</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Nama Perusahaan:</strong>
+                        <span id="detail-partner-name">Kopi Nusantara</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Email:</strong>
+                        <span id="detail-partner-email">info@kopinusantara.com</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Telepon:</strong>
+                        <span id="detail-partner-phone">081234567890</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Alamat:</strong>
+                        <span id="detail-partner-address">Jl. Kopi Raya No. 123, Jakarta Selatan</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Tanggal Daftar:</strong>
+                        <span id="detail-partner-date">15 Mei 2025</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Status:</strong>
+                        <span id="detail-partner-status" class="badge badge-success">Aktif</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Tipe Bisnis:</strong>
+                        <span id="detail-partner-type">Distributor</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Deskripsi:</strong>
+                        <span id="detail-partner-description">Perusahaan distributor kopi dengan jaringan retail di seluruh Indonesia. Fokus pada penjualan kopi premium untuk segmen menengah ke atas.</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Produk Minat:</strong>
+                        <span id="detail-partner-products">Arabica Gayo, Blend Signature, Toraja Sapan</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="close-partner-details">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin/manage-mitra.js"></script>
+    <script src="js/admin/admin.js"></script>
+</body>
+</html>

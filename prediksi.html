@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Produk</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="panel-header">
+        <div class="panel-title">Prediksi Produk</div>
+    </div>
+    <div class="panel-body">
+        <div class="tabs">
+            <button class="tab-btn active" data-target="prediction-upload">Data Prediksi</button>
+            <button class="tab-btn" data-target="prediction-results">Hasil Prediksi</button>
+            <button class="tab-btn" data-target="prediction-history">Riwayat Prediksi</button>
+        </div>
+
+        <!-- Data Prediksi Tab -->
+        <div class="tab-content active" id="prediction-upload">
+            <div class="card">
+                <h3>Unggah Database Prediksi</h3>
+                <p>Unggah data penjualan bulan sebelumnya untuk analisis prediksi pasar.</p>
+                
+                <div class="file-upload" id="predictionFileUpload">
+                    <div>📁 Pilih file atau seret ke sini</div>
+                    <p>Format yang didukung: CSV, Excel (.xlsx, .xls)</p>
+                    <input type="file" class="file-input" id="prediction-file-input" accept=".csv,.xlsx,.xls">
+                </div>
+
+                <div class="file-list" id="prediction-file-list">
+                    <!-- File yang diunggah akan muncul di sini -->
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Periode Data</label>
+                    <input type="month" class="form-control" id="prediction-period" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Catatan/Keterangan</label>
+                    <textarea class="form-control" id="prediction-notes" rows="3" placeholder="Tambahkan catatan khusus untuk data ini..."></textarea>
+                </div>
+
+                <button class="btn btn-primary" id="upload-prediction-data">Unggah Data</button>
+                <button class="btn btn-success" id="process-prediction" style="margin-left: 10px;">Proses Prediksi AI</button>
+            </div>
+
+            <div class="table-container">
+                <h3>Database Prediksi Tersimpan</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Periode</th>
+                            <th>Nama File</th>
+                            <th>Tanggal Unggah</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PD001</td>
+                            <td>April 2025</td>
+                            <td>penjualan_april_2025.csv</td>
+                            <td>01 Mei 2025</td>
+                            <td><span class="badge badge-success">Diproses</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-prediction-data" data-id="PD001">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-prediction-data" data-id="PD001">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-prediction-data" data-id="PD001">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PD002</td>
+                            <td>Maret 2025</td>
+                            <td>penjualan_maret_2025.xlsx</td>
+                            <td>02 April 2025</td>
+                            <td><span class="badge badge-success">Diproses</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-prediction-data" data-id="PD002">Lihat</button>
+                                <button class="btn btn-secondary btn-sm edit-prediction-data" data-id="PD002">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-prediction-data" data-id="PD002">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PD003</td>
+                            <td>Februari 2025</td>
+                            <td>penjualan_februari_2025.csv</td>
+                            <td>03 Maret 2025</td>
+                            <td><span class="badge badge-info">Pending</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-prediction-data" data-id="PD003">Lihat</button>
+                                <button class="btn btn-primary btn-sm process-data" data-id="PD003">Proses</button>
+                                <button class="btn btn-danger btn-sm delete-prediction-data" data-id="PD003">Hapus</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Hasil Prediksi Tab -->
+        <div class="tab-content" id="prediction-results">
+            <div class="prediction-summary">
+                <div class="summary-card">
+                    <div class="summary-icon">📈</div>
+                    <div class="summary-content">
+                        <div class="summary-title">Prediksi Bulan Ini</div>
+                        <div class="summary-value">Mei 2025</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">🎯</div>
+                    <div class="summary-content">
+                        <div class="summary-title">Akurasi Model</div>
+                        <div class="summary-value">87.5%</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">📊</div>
+                    <div class="summary-content">
+                        <div class="summary-title">Total Produk</div>
+                        <div class="summary-value">8 Produk</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">⚡</div>
+                    <div class="summary-content">
+                        <div class="summary-title">Status</div>
+                        <div class="summary-value">Terbaru</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Prediksi Penjualan Kopi - Mei 2025</div>
+                <div id="prediction-chart" style="height: 300px; background-color: #f9f9f9; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; border-radius: 8px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">📊</div>
+                        <div>Grafik prediksi penjualan akan ditampilkan di sini</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">Menggunakan algoritma AI untuk analisis tren</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>Hasil Prediksi Pasar oleh AI</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Produk</th>
+                            <th>Prediksi Penjualan</th>
+                            <th>Penjualan Bulan Lalu</th>
+                            <th>Tren</th>
+                            <th>Tingkat Kepercayaan</th>
+                            <th>Rekomendasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Arabica Gayo</td>
+                            <td>150 kg</td>
+                            <td>130 kg</td>
+                            <td><span class="trend-up">↑ +15%</span></td>
+                            <td><span class="confidence-high">92%</span></td>
+                            <td><span class="recommendation recommend-increase">Tingkatkan produksi</span></td>
+                        </tr>
+                        <tr>
+                            <td>Robusta Lampung</td>
+                            <td>90 kg</td>
+                            <td>85 kg</td>
+                            <td><span class="trend-up">↑ +5%</span></td>
+                            <td><span class="confidence-high">85%</span></td>
+                            <td><span class="recommendation recommend-maintain">Pertahankan produksi</span></td>
+                        </tr>
+                        <tr>
+                            <td>Blend Signature</td>
+                            <td>60 kg</td>
+                            <td>50 kg</td>
+                            <td><span class="trend-up">↑ +20%</span></td>
+                            <td><span class="confidence-high">88%</span></td>
+                            <td><span class="recommendation recommend-increase">Tingkatkan produksi</span></td>
+                        </tr>
+                        <tr>
+                            <td>Toraja Sapan</td>
+                            <td>25 kg</td>
+                            <td>30 kg</td>
+                            <td><span class="trend-down">↓ -15%</span></td>
+                            <td><span class="confidence-medium">78%</span></td>
+                            <td><span class="recommendation recommend-decrease">Kurangi produksi</span></td>
+                        </tr>
+                        <tr>
+                            <td>Kopi Aceh</td>
+                            <td>85 kg</td>
+                            <td>75 kg</td>
+                            <td><span class="trend-up">↑ +13%</span></td>
+                            <td><span class="confidence-high">90%</span></td>
+                            <td><span class="recommendation recommend-increase">Tingkatkan produksi</span></td>
+                        </tr>
+                        <tr>
+                            <td>Java Preanger</td>
+                            <td>40 kg</td>
+                            <td>35 kg</td>
+                            <td><span class="trend-up">↑ +14%</span></td>
+                            <td><span class="confidence-medium">82%</span></td>
+                            <td><span class="recommendation recommend-increase">Tingkatkan produksi</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="generate-report">Unduh Laporan Prediksi</button>
+                <button class="btn btn-secondary" id="export-data">Export Data Excel</button>
+                <button class="btn btn-info" id="share-prediction">Bagikan Hasil</button>
+            </div>
+        </div>
+
+        <!-- Riwayat Prediksi Tab -->
+        <div class="tab-content" id="prediction-history">
+            <div class="search-filter">
+                <input type="text" class="form-control" placeholder="Cari riwayat..." id="history-search">
+                <select class="form-control" id="history-period-filter">
+                    <option value="">Semua Periode</option>
+                    <option value="2025-05">Mei 2025</option>
+                    <option value="2025-04">April 2025</option>
+                    <option value="2025-03">Maret 2025</option>
+                    <option value="2025-02">Februari 2025</option>
+                </select>
+                <button class="btn btn-secondary">Filter</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Periode Prediksi</th>
+                            <th>Tanggal Dibuat</th>
+                            <th>Akurasi</th>
+                            <th>Total Produk</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PR001</td>
+                            <td>Mei 2025</td>
+                            <td>01 Mei 2025</td>
+                            <td>87.5%</td>
+                            <td>8 produk</td>
+                            <td><span class="badge badge-success">Aktif</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-prediction" data-id="PR001">Lihat</button>
+                                <button class="btn btn-secondary btn-sm download-prediction" data-id="PR001">Unduh</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PR002</td>
+                            <td>April 2025</td>
+                            <td>01 April 2025</td>
+                            <td>89.2%</td>
+                            <td>8 produk</td>
+                            <td><span class="badge badge-info">Selesai</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-prediction" data-id="PR002">Lihat</button>
+                                <button class="btn btn-secondary btn-sm download-prediction" data-id="PR002">Unduh</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PR003</td>
+                            <td>Maret 2025</td>
+                            <td>01 Maret 2025</td>
+                            <td>85.7%</td>
+                            <td>7 produk</td>
+                            <td><span class="badge badge-info">Selesai</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-prediction" data-id="PR003">Lihat</button>
+                                <button class="btn btn-secondary btn-sm download-prediction" data-id="PR003">Unduh</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PR004</td>
+                            <td>Februari 2025</td>
+                            <td>01 Februari 2025</td>
+                            <td>83.4%</td>
+                            <td>6 produk</td>
+                            <td><span class="badge badge-info">Selesai</span></td>
+                            <td class="actions">
+                                <button class="btn btn-secondary btn-sm view-prediction" data-id="PR004">Lihat</button>
+                                <button class="btn btn-secondary btn-sm download-prediction" data-id="PR004">Unduh</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Prediction Data Modal -->
+    <div class="modal-backdrop" id="prediction-data-modal-backdrop">
+        <div class="modal" id="prediction-data-modal">
+            <div class="modal-header">
+                <div class="modal-title">Detail Data Prediksi</div>
+                <button class="modal-close" id="close-prediction-data-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="prediction-data-details">
+                    <div class="detail-item">
+                        <strong>ID Data:</strong>
+                        <span id="detail-data-id">PD001</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Periode:</strong>
+                        <span id="detail-data-period">April 2025</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Nama File:</strong>
+                        <span id="detail-data-filename">penjualan_april_2025.csv</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Tanggal Unggah:</strong>
+                        <span id="detail-data-upload-date">01 Mei 2025</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Status:</strong>
+                        <span id="detail-data-status" class="badge badge-success">Diproses</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Jumlah Record:</strong>
+                        <span id="detail-data-records">1,245 baris</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Catatan:</strong>
+                        <span id="detail-data-notes">Data penjualan lengkap untuk bulan April 2025, sudah termasuk data dari semua mitra bisnis.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="close-prediction-data-details">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin/prediksi.js"></script>
+    <script src="js/admin/admin.js"></script>
+</body>
+</html>
