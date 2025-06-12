@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ROAST</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/autentikasi/login.css">
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+    <div class="background-blob blob-3"></div>
+    
+    <div class="login-container">
+        <div class="logo">
+            <div class="cart-icon">
+                🛒
+            </div>
+        </div>
+        
+        <form id="loginForm">
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i> <span id="errorText"></span>
+            </div>
+
+            <!-- Email Input -->
+            <div class="form-group">
+                <i class="fas fa-user form-icon"></i>
+                <input type="email" 
+                       name="email" 
+                       class="form-control" 
+                       placeholder="EMAIL" 
+                       required>
+            </div>
+            
+            <!-- Password Input -->
+            <div class="form-group password-container">
+                <i class="fas fa-lock form-icon"></i>
+                <input type="password" 
+                       name="password" 
+                       class="form-control" 
+                       placeholder="PASSWORD" 
+                       required>
+                <i class="fas fa-eye-slash toggle-password"></i>
+            </div>
+            
+            <button type="submit" class="btn">LOGIN</button>
+        </form>
+        
+        <div class="register-link">
+            Belum punya akun? <a href="register.html">Daftar disini</a>
+        </div>
+    </div>
+</body>
+    <script src="js/auth/login.js" type="module"></script>
+</html>

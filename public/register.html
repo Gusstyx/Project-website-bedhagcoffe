@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ROAST</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/autentikasi/register.css">
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+    <div class="background-blob blob-3"></div>
+    
+    <div class="register-container">
+        <div class="logo">
+            <div class="cart-icon">
+                🛒
+            </div>
+        </div>
+        
+        <form id="registerForm">
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i> <span id="errorText"></span>
+            </div>
+
+            <!-- Name Input -->
+            <div class="form-group">
+                <i class="fas fa-user form-icon"></i>
+                <input type="text" 
+                       name="name" 
+                       class="form-control" 
+                       placeholder="NAMA MITRA" 
+                       required>
+            </div>
+            
+            <!-- Email Input -->
+            <div class="form-group">
+                <i class="fas fa-envelope form-icon"></i>
+                <input type="email" 
+                       name="email" 
+                       class="form-control" 
+                       placeholder="ALAMAT EMAIL" 
+                       required>
+            </div>
+            
+            <!-- Password Input -->
+            <div class="form-group password-container">
+                <i class="fas fa-lock form-icon"></i>
+                <input type="password" 
+                       name="password" 
+                       class="form-control" 
+                       placeholder="PASSWORD" 
+                       required>
+                <i class="fas fa-eye-slash toggle-password"></i>
+            </div>
+            
+            <!-- Confirm Password Input -->
+            <div class="form-group password-container">
+                <i class="fas fa-lock form-icon"></i>
+                <input type="password" 
+                       name="confirmPassword" 
+                       class="form-control" 
+                       placeholder="KONFIRMASI PASSWORD" 
+                       required>
+                <i class="fas fa-eye-slash toggle-password"></i>
+            </div>
+            
+            <button type="submit" class="btn">DAFTAR SEBAGAI MITRA</button>
+        </form>
+        
+        <div class="login-link">
+            Sudah punya akun? <a href="login.html">Login disini</a>
+        </div>
+    </div>
+</body>
+    <script src="js/auth/register.js" type="module"></script>
+</html>

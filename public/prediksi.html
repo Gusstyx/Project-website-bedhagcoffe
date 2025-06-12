@@ -1,0 +1,223 @@
+<div class="prediksi-page">
+    <div class="container">
+        <div class="main-content">
+            <!-- Tab Navigation -->
+            <div class="tab-navigation" role="tablist" aria-label="Navigasi Tab Prediksi">
+                <button class="tab-button active" onclick="switchTab('penjualan')" role="tab" aria-selected="true" aria-controls="penjualan" id="tab-penjualan">
+                    <span aria-hidden="true">📊</span> Data Penjualan
+                </button>
+                <button class="tab-button" onclick="switchTab('prediksi')" role="tab" aria-selected="false" aria-controls="prediksi" id="tab-prediksi">
+                    <span aria-hidden="true">📈</span> Prediksi
+                </button>
+                <button class="tab-button" onclick="switchTab('riwayat')" role="tab" aria-selected="false" aria-controls="riwayat" id="tab-riwayat">
+                    <span aria-hidden="true">📋</span> Riwayat Prediksi
+                </button>
+            </div>
+
+            <!-- Tab Content Container -->
+            <div class="tab-content">
+                <!-- Tab Data Penjualan -->
+                <div id="penjualan" class="tab-pane active" role="tabpanel" aria-labelledby="tab-penjualan" tabindex="0">
+                    <h2>Data Penjualan</h2>
+
+                    <!-- Filters Section -->
+                    <div class="filters" aria-label="Filter Data Penjualan">
+                        <div class="filter-group">
+                            <label for="filterTanggal">Filter Tanggal Minggu:</label>
+                            <select id="filterTanggal" onchange="filterData()" aria-controls="salesTableBody" aria-describedby="filterTanggalDesc">
+                                <option value="">Semua Tanggal</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                            <span id="filterTanggalDesc" class="sr-only">Pilih tanggal minggu untuk memfilter data</span>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterProduk">Filter Produk:</label>
+                            <select id="filterProduk" onchange="filterData()" aria-controls="salesTableBody" aria-describedby="filterProdukDesc">
+                                <option value="">Semua Produk</option>
+                            </select>
+                            <span id="filterProdukDesc" class="sr-only">Pilih produk untuk memfilter data</span>
+                        </div>
+                    </div>
+
+                    <!-- Add Data Button -->
+                    <button class="btn btn-primary" onclick="openAddSalesModal()" aria-haspopup="dialog">
+                        <span aria-hidden="true">➕</span> Tambah Data Penjualan
+                    </button>
+
+                    <!-- Sales Data Table -->
+                    <table class="data-table" id="salesTable" aria-describedby="salesTableDesc">
+                        <caption id="salesTableDesc">Tabel data penjualan produk kopi</caption>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Produk</th>
+                                <th>Tanggal Minggu</th>
+                                <th>Stok Awal (kg)</th>
+                                <th>Stok Terjual (kg)</th>
+                                <th>Stok Akhir (kg)</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTableBody">
+                            <!-- Sales data populated by JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <!-- Modal for Adding Sales Data -->
+                    <div id="addSalesModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+                        <div class="modal-content">
+                            <button class="close" onclick="closeAddSalesModal()" aria-label="Tutup modal">&times;</button>
+                            <h2 id="modalTitle">Tambah Data Penjualan</h2>
+                            <form id="addSalesForm" onsubmit="event.preventDefault(); saveSalesData();">
+                                <div class="filter-group">
+                                    <label for="modalProduct">Produk:</label>
+                                    <select id="modalProduct" required>
+                                        <!-- Options will be populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label for="modalDate">Tanggal Minggu:</label>
+                                    <input type="date" id="modalDate" required />
+                                </div>
+                                <div class="filter-group">
+                                    <label for="modalInitialStock">Stok Awal (kg):</label>
+                                    <input type="number" id="modalInitialStock" min="0" required />
+                                </div>
+                                <div class="filter-group">
+                                    <label for="modalSoldStock">Stok Terjual (kg):</label>
+                                    <input type="number" id="modalSoldStock" min="0" required />
+                                </div>
+                                <div style="text-align:right; margin-top: 20px;">
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Prediksi -->
+                <div id="prediksi" class="tab-pane" role="tabpanel" aria-labelledby="tab-prediksi" tabindex="0">
+                    <h2>Prediksi Penjualan</h2>
+
+                    <!-- Chart Container -->
+                    <div class="chart-container" aria-label="Grafik Penjualan dan Prediksi">
+                        <h3>Grafik Penjualan & Prediksi</h3>
+                        <canvas id="predictionChart" aria-describedby="chartDesc" width="100%" height="400"></canvas>
+                        <p id="chartDesc" class="sr-only">Grafik menampilkan data penjualan historis dan hasil prediksi penjualan untuk produk terpilih</p>
+                    </div>
+
+                    <!-- Prediction Controls -->
+                    <div class="prediction-controls" role="form" aria-label="Kontrol Prediksi">
+                        <div class="filter-group">
+                            <label for="predictionProduct">Pilih Produk:</label>
+                            <select id="predictionProduct" required>
+                                <option value="arabica">Arabica Premium</option>
+                                <option value="robusta">Robusta Gold</option>
+                                <option value="liberica">Liberica Special</option>
+                                <option value="blend">House Blend</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="predictionPeriod">Periode Prediksi (minggu):</label>
+                            <select id="predictionPeriod" required>
+                                <option value="2">2 Minggu</option>
+                                <option value="4">4 Minggu</option>
+                                <option value="8">8 Minggu</option>
+                                <option value="12">12 Minggu</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" style="align-self: flex-end;">
+                            <button class="btn btn-primary" onclick="runPrediction()" aria-live="polite">
+                                <span aria-hidden="true">▶️</span> Mulai Prediksi
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div class="results-section" id="predictionResults" style="display:none;" aria-live="polite" aria-atomic="true">
+                        <!-- Recommendation Card -->
+                        <div class="recommendation-card" aria-label="Rekomendasi Pembelian">
+                            <h3>💡 Rekomendasi Pembelian</h3>
+                            <div class="recommendation-grid" id="recommendationGrid">
+                                <!-- Recommendations populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Prediction Details -->
+                        <h3>Hasil Prediksi Detail</h3>
+                        <table class="data-table" aria-describedby="predictionTableDesc">
+                            <caption id="predictionTableDesc">Detail prediksi penjualan produk</caption>
+                            <thead>
+                                <tr>
+                                    <th>Produk</th>
+                                    <th>Tanggal Prediksi</th>
+                                    <th>Prediksi Terjual (kg)</th>
+                                    <th>Sisa Stok (kg)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="predictionTableBody">
+                                <!-- Prediction details populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab Riwayat Prediksi -->
+                <div id="riwayat" class="tab-pane" role="tabpanel" aria-labelledby="tab-riwayat" tabindex="0">
+                    <h2>Riwayat Prediksi</h2>
+
+                    <!-- History Filters -->
+                    <div class="filters" aria-label="Filter Riwayat Prediksi">
+                        <div class="filter-group">
+                            <label for="filterRiwayatProduk">Filter Produk:</label>
+                            <select id="filterRiwayatProduk" onchange="filterHistoryData()">
+                                <option value="">Semua Produk</option>
+                                <option value="Arabica Premium">Arabica Premium</option>
+                                <option value="Robusta Gold">Robusta Gold</option>
+                                <option value="Liberica Special">Liberica Special</option>
+                                <option value="House Blend">House Blend</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterStatus">Filter Status:</label>
+                            <select id="filterStatus" onchange="filterHistoryData()">
+                                <option value="">Semua Status</option>
+                                <option value="Akurat">Akurat</option>
+                                <option value="Cukup Akurat">Cukup Akurat</option>
+                                <option value="Sangat Akurat">Sangat Akurat</option>
+                                <option value="Tidak Akurat">Tidak Akurat</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- History Table -->
+                    <table class="data-table" aria-describedby="historyTableDesc">
+                        <caption id="historyTableDesc">Tabel riwayat hasil prediksi penjualan</caption>
+                        <thead>
+                            <tr>
+                                <th>Tanggal Prediksi</th>
+                                <th>Produk</th>
+                                <th>Akurasi (%)</th>
+                                <th>Prediksi Terjual (kg)</th>
+                                <th>Aktual Terjual (kg)</th>
+                                <th>Status</th>
+                                <th>Selisih (kg)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- History data populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <!-- Accuracy Statistics -->
+                    <div class="recommendation-card" style="margin-top: 30px;" aria-label="Statistik Akurasi Prediksi">
+                        <h3>📊 Statistik Akurasi Prediksi</h3>
+                        <div class="recommendation-grid" id="accuracyStats">
+                            <!-- Accuracy stats populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

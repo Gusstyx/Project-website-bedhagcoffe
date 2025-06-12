@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Management System - Mitra Dashboard</title>
+    <link rel="stylesheet" href="/css/mitra/mitra.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Coffee Management</h3>
+                <p>Mitra Dashboard</p>
+            </div>
+            <div class="menu">
+				<div class="menu-item" onclick="window.location.href='index.html'">
+                	<div class="menu-icon">🏠</div>
+                	<span>Beranda</span>
+            	</div>
+                <div class="menu-item active" data-target="dashboard">
+                    <div class="menu-icon">📊</div>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item" data-target="upload">
+                    <div class="menu-icon">☕</div>
+                    <span>Upload Dokumen</span>
+                </div>
+                <div class="menu-item" data-target="documents">
+                    <div class="menu-icon">📄</div>
+                    <span>Dokumen & Kontrak</span>
+                </div>
+				<div class="menu-item" id="logout-mitra">
+					<div class="menu-icon">🚪</div>
+					<span>Keluar</span>
+				</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <div class="header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-name">Mitra</div>
+                    <div class="user-avatar">A</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Panel -->
+            <div class="panel active" id="dashboard">
+                <div class="card">
+                    <h3>Profil Mitra</h3>
+                    <div class="form-group">
+                        <label class="form-label">Nama Pengguna</label>
+                        <input type="text" class="form-control" value="Mitra" id="mitra-username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" value="mitra@coffeemanagement.com" id="mitra-email">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label">Kata Sandi</label>
+                                <input type="password" class="form-control" id="new-password">
+                            </div>
+                        </div>
+                        <div class="form-col"></div>
+                    </div>
+                </div>
+
+                <div class="panel-header">
+                    <div class="panel-title">Notifikasi</div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Aktivitas</th>
+                                    <th>Pengguna</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>21 Mei 2025</td>
+                                    <td>Pendaftaran mitra baru</td>
+                                    <td>Kopi Nusantara</td>
+                                    <td><span class="badge badge-success">Acc</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Panel -->
+            <div class="panel" id="upload">
+                <div class="panel-header">
+                    <div class="panel-title">Upload Dokumen</div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Dokumen</th>
+                                    <th>Upload Dokumen</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>KP001</td>
+                                    <td>Arabica Gayo</td>
+                                    <td>
+                                        <div class="file-upload">
+                                            <div>📁 Pilih file atau seret ke sini</div>
+                                            <input type="file" class="file-input">
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button type="submit" class="btn btn-primary btn-sm">Upload</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>KP002</td>
+                                    <td>Robusta Lampung</td>
+                                    <td>
+                                        <div class="file-upload">
+                                            <div>📁 Pilih file atau seret ke sini</div>
+                                            <input type="file" class="file-input">
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="btn btn-primary btn-sm">Upload</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Panel -->
+            <div class="panel" id="documents">
+                <div class="panel-header">
+                    <div class="panel-title">Dokumen & Kontrak</div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Dokumen</th>
+                                    <th>Mitra Terkait</th>
+                                    <th>Tanggal Unggah</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>DOC001</td>
+                                    <td>Kontrak Kerjasama Kopi Nusantara</td>
+                                    <td>Kopi Nusantara</td>
+                                    <td>15 Mei 2025</td>
+                                    <td class="actions">
+                                        <button class="btn btn-secondary btn-sm">Lihat</button>
+                                        <button class="btn btn-secondary btn-sm">Edit</button>
+                                        <button class="btn btn-danger btn-sm">Hapus</button>
+                                        <button class="btn btn-secondary btn-sm">Download</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>DOC002</td>
+                                    <td>MoU Java Bean</td>
+                                    <td>Java Bean</td>
+                                    <td>10 Mei 2025</td>
+                                    <td class="actions">
+                                        <button class="btn btn-secondary btn-sm">Lihat</button>
+                                        <button class="btn btn-secondary btn-sm">Edit</button>
+                                        <button class="btn btn-danger btn-sm">Hapus</button>
+                                        <button class="btn btn-secondary btn-sm">Download</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="/js/mitra/mitra.js"></script>
+</body>
+</html>

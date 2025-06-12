@@ -1,177 +1,150 @@
+require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2/promise');
-const bcrypt = require('bcryptjs');
+const path = require('path');
 const cors = require('cors');
+const session = require('express-session');
+const fs = require('fs');
+const bcrypt = require('bcryptjs');
+const pool = require('./db/mysql');
+
+const produkRouter = require('./routes/produk-routes');
+const authRouter = require('./routes/auth');
+const manageMitraRouter = require('./routes/mitra-routes');
+const salesRouter = require('./routes/sales-routes');
+const prediksiRouter = require('./routes/prediksi-routes');
+
 const app = express();
 
-// ======================
-//  KONFIGURASI DASAR
-// ======================
-const PORT = process.env.PORT || 5500;
-
-// ======================
-//  MIDDLEWARE
-// ======================
-app.use(cors());
+// ======= MIDDLEWARE =======
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// ======================
-//  VALIDASI REGISTRASI
-// ======================
-const validateRegistration = (req, res, next) => {
-  const { name, email, password } = req.body;
-  
-  // Validasi field kosong
-  if (!name?.trim() || !email?.trim() || !password?.trim()) {
-    return res.status(400).json({
-      success: false,
-      message: 'Semua field harus diisi'
-    });
-  }
-
-  // Validasi format email
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({
-      success: false,
-      message: 'Format email tidak valid'
-    });
-  }
-
-  // Validasi panjang password
-  if (password.length < 8) {
-    return res.status(400).json({
-      success: false,
-      message: 'Password minimal 8 karakter'
-    });
-  }
-
-  next();
-};
-
-// ======================
-//  KONEKSI DATABASE
-// ======================
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'bedhagcoffe',
-  port: 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  connectTimeout: 10000
-});
-
-// ======================
-//  INISIALISASI DATABASE
-// ======================
-const initializeDatabase = async () => {
-  let connection;
-  try {
-    connection = await pool.getConnection();
-    console.log('Terhubung ke database MySQL');
-    
-    await connection.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        role ENUM('admin', 'mitra') NOT NULL DEFAULT 'mitra',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )`);
-    
-    console.log('Tabel users siap');
-  } catch (err) {
-    console.error('Gagal inisialisasi database:', err);
-    process.exit(1);
-  } finally {
-    if (connection) connection.release();
-  }
-};
-
-// ======================
-//  ROUTES 
-// ======================
-app.post('/api/register', validateRegistration, async (req, res, next) => {
-  let connection;
-  try {
-    connection = await pool.getConnection();
-    
-    // Cek duplikasi email
-    const [existing] = await connection.query(
-    'SELECT id FROM users WHERE LOWER(email) = ?',
-    [req.body.email.trim().toLowerCase()] // Konversi ke 
-    );
-
-    if (existing.length > 0) {
-      return res.status(409).json({
-        success: false,
-        message: 'Email sudah terdaftar'
-      });
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    // Simpan ke database
-    await connection.query(
-      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-      [
-        req.body.name.trim(),
-        req.body.email.trim().toLowerCase(),
-        hashedPassword
-      ]
-    );
-
-    res.status(201).json({
-      success: true,
-      message: 'Registrasi mitra berhasil!'
-    });
-
-  } catch (error) {
-    next(error); // Teruskan error ke handler
-  } finally {
-    if (connection) connection.release();
-  }
-});
-
-
 app.use(express.static('public'));
-// ======================
-//  ERROR HANDLER (DIPINDAHKAN KE BAWAH)
-// ======================
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'rahasiaSessionKey',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 24*60*60*1000, sameSite: 'lax' }
+}));
+
+// =========== INISIALISASI DB ==============
+async function initializeDatabase() {
+    let connection;
+    try {
+        connection = await pool.getConnection();
+
+        // USERS
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                role ENUM('admin', 'mitra') NOT NULL DEFAULT 'mitra',
+                status ENUM('pending', 'active') NOT NULL DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Admin default (optional)
+        const [admin] = await connection.query(
+            "SELECT id FROM users WHERE email = 'bedhagcoffe@mail.com'"
+        );
+        if (admin.length === 0) {
+            const hashedPass = await bcrypt.hash('admin123', 10);
+            await connection.query(
+                "INSERT INTO users (name, email, password, role, status) VALUES (?, ?, ?, ?, ?)",
+                ['Admin Bedhag', 'bedhagcoffe@mail.com', hashedPass, 'admin','active']
+            );
+            console.log('✅ Akun admin berhasil dibuat');
+        }
+
+        // PRODUK
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS produk (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                nama VARCHAR(100) NOT NULL,
+                harga INT,
+                deskripsi TEXT,
+                gambar VARCHAR(255)
+            )
+        `);
+
+        // SALES (Perhatikan: stok_awal WAJIB ada!)
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS sales (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                produk_id INT NOT NULL,
+                tanggal_minggu DATE NOT NULL, -- Format YYYY-MM-DD (minggu ke berapa pun)
+                stok_awal FLOAT NOT NULL,
+                stok_terjual FLOAT NOT NULL,
+                stok_akhir FLOAT AS (stok_awal - stok_terjual) STORED,
+                FOREIGN KEY (produk_id) REFERENCES produk(id)
+            )
+        `);
+
+        // PREDIKSI
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS prediksi (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                produk_id INT NOT NULL,
+                tanggal_minggu_prediksi DATE NOT NULL,
+                jumlah_prediksi FLOAT,
+                tanggal_prediksi DATE,
+                FOREIGN KEY (produk_id) REFERENCES produk(id)
+            )
+        `);
+
+        // Uploads folder
+        const uploadDir = path.join(__dirname, 'public', 'uploads');
+        if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    } catch (err) {
+        console.error('❌ Gagal inisialisasi database:', err);
+        process.exit(1);
+    } finally {
+        if (connection) connection.release();
+    }
+}
+
+// ====== ROUTER ======
+app.use('/api', authRouter);
+app.use('/api/mitra', manageMitraRouter);
+app.use('/api/produk', produkRouter);
+app.use('/api/sales', salesRouter);
+app.use('/api/prediksi', prediksiRouter);
+
+// ====== LOGOUT ROUTE ======
+app.post('/api/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).json({ success: false });
+        res.clearCookie('connect.sid');
+        res.json({ success: true });
+    });
+});
+
+// ====== STATIC HTML ROUTES ======
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+app.get('/admin.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// ====== ERROR HANDLER ======
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({
-    success: false,
-    message: 'Terjadi kesalahan server'
-  });
+    console.error('Error:', err);
+    res.status(500).json({ success: false, message: 'Terjadi kesalahan server' });
 });
 
-// ======================
-//  START SERVER
-// ======================
-const startServer = async () => {
-  await initializeDatabase();
-  
-  app.listen(PORT, () => {
-    console.log(`Server berjalan di port ${PORT}`);
-  });
-};
-
-// Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1);
+// ====== START SERVER ======
+const PORT = process.env.PORT || 5500;
+initializeDatabase().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server berjalan di http://localhost:${PORT}`);
+    });
 });
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err);
-  process.exit(1);
-});
-
-startServer();

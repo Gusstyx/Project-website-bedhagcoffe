@@ -1,0 +1,59 @@
+<div class="panel-header">
+    <div class="panel-title">Upload Dokumen</div>
+</div>
+<div class="panel-body" style="background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:32px 24px;">
+
+    <section style="margin-bottom:32px;">
+        <button class="btn btn-primary" id="tambah-dokumen" style="margin-bottom:16px;background:#805b36;">+ Tambah Dokumen</button>
+        <div class="table-container">
+            <table class="data-table" id="tabel-upload-dokumen">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Dokumen</th>
+                        <th>Upload Dokumen</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Contoh baris dummy, akan diisi otomatis via JS di backend sebenarnya -->
+                    <tr>
+                        <td>KP001</td>
+                        <td>Arabica Gayo</td>
+                        <td>
+                            <label class="dropzone">
+                                <input type="file" style="display:none;">
+                                <span style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#805b36;">
+                                    <span style="font-size:1.4em;">📁</span> Pilih file atau seret ke sini
+                                </span>
+                            </label>
+                        </td>
+                        <td style="display:flex;gap:6px;">
+                            <button class="btn btn-secondary btn-sm lihat-dokumen" style="background:#d8c2a5;color:#6e4e2e;">Lihat</button>
+                            <button class="btn btn-secondary btn-sm edit-dokumen" style="background:#f5e7d2;color:#6e4e2e;">Edit</button>
+                            <button class="btn btn-danger btn-sm hapus-dokumen" style="background:#c76c4e;color:#fff;">Hapus</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>KP002</td>
+                        <td>Robusta Lampung</td>
+                        <td>
+                            <label class="dropzone">
+                                <input type="file" style="display:none;">
+                                <span style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#805b36;">
+                                    <span style="font-size:1.4em;">📁</span> Pilih file atau seret ke sini
+                                </span>
+                            </label>
+                        </td>
+                        <td style="display:flex;gap:6px;">
+                            <button class="btn btn-secondary btn-sm lihat-dokumen" style="background:#d8c2a5;color:#6e4e2e;">Lihat</button>
+                            <button class="btn btn-secondary btn-sm edit-dokumen" style="background:#f5e7d2;color:#6e4e2e;">Edit</button>
+                            <button class="btn btn-danger btn-sm hapus-dokumen" style="background:#c76c4e;color:#fff;">Hapus</button>
+                        </td>
+                    </tr>
+                    <!-- Baris dokumen baru bisa otomatis ditambah dengan JS -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
