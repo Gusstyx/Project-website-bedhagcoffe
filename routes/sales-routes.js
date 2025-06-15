@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
                 });
             }
             await connection.query(
-                'INSERT INTO sales (produk_id, tanggal_minggu, stok_awal, stok_terjual) VALUES (?, ?, ?, ?)',
+                'INSERT INTO sales (produk_id, tanggal_minggu, stok_awal, stok_terjual,stok_akhir) VALUES (?, ?, ?, ?, ?)',
                 [sale.produk_id, sale.tanggal_minggu, sale.stok_awal, sale.stok_terjual]
             );
         }

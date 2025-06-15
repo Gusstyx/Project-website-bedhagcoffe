@@ -68,11 +68,11 @@
                         <div class="modal-content">
                             <button class="close" onclick="closeAddSalesModal()" aria-label="Tutup modal">&times;</button>
                             <h2 id="modalTitle">Tambah Data Penjualan</h2>
-                            <form id="addSalesForm" onsubmit="event.preventDefault(); saveSalesData();">
+                            <form id="addSalesForm">
                                 <div class="filter-group">
                                     <label for="modalProduct">Produk:</label>
                                     <select id="modalProduct" required>
-                                        <!-- Options will be populated dynamically -->
+                                        <!-- Akan diisi otomatis oleh JS -->
                                     </select>
                                 </div>
                                 <div class="filter-group">
@@ -111,10 +111,6 @@
                         <div class="filter-group">
                             <label for="predictionProduct">Pilih Produk:</label>
                             <select id="predictionProduct" required>
-                                <option value="arabica">Arabica Premium</option>
-                                <option value="robusta">Robusta Gold</option>
-                                <option value="liberica">Liberica Special</option>
-                                <option value="blend">House Blend</option>
                             </select>
                         </div>
                         <div class="filter-group">
@@ -173,10 +169,6 @@
                             <label for="filterRiwayatProduk">Filter Produk:</label>
                             <select id="filterRiwayatProduk" onchange="filterHistoryData()">
                                 <option value="">Semua Produk</option>
-                                <option value="Arabica Premium">Arabica Premium</option>
-                                <option value="Robusta Gold">Robusta Gold</option>
-                                <option value="Liberica Special">Liberica Special</option>
-                                <option value="House Blend">House Blend</option>
                             </select>
                         </div>
                         <div class="filter-group">

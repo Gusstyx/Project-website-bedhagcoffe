@@ -48,7 +48,8 @@ router.post('/proses', async (req, res) => {
     }
 });
 
-// GET /api/prediksi?minggu_dari=YYYY-MM-DD&minggu_sampai=YYYY-MM-DD
+
+
 router.get('/', async (req, res) => {
     const { minggu_dari, minggu_sampai } = req.query;
     let connection;

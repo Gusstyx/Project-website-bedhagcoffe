@@ -6,18 +6,22 @@ async function loadContent(target, filename) {
             const content = await response.text();
             document.getElementById(target).innerHTML = content;
 
-            // ==== INISIALISASI KHUSUS SETIAP PANEL ====
-
-            // -- Prediksi: pastikan panel prediksi.js sudah di-load
             if (target === 'predictions') {
                 try {
-                    import('./prediksi.js').then(() => {
-                        if (window.initPrediksiPanel) window.initPrediksiPanel();
-                    }).catch(() => {
-                        if (window.initPrediksiPanel) window.initPrediksiPanel();
-                    });
-                } catch {
+                    // Perbaiki path ke folder prediksi
+                    await loadScripts([
+                        './js/admin/prediksi/utils.js',
+                        './js/admin/prediksi/sales.js',
+                        './js/admin/prediksi/predict-history.js',
+                        './js/admin/prediksi/prediction.js',
+                        './js/admin/prediksi/predict-main.js'
+                    ]);
+                    
+                    // Inisialisasi panel prediksi
                     if (window.initPrediksiPanel) window.initPrediksiPanel();
+                } catch (error) {
+                    console.error('Gagal memuat modul prediksi:', error);
+                    showNotification('Gagal memuat modul prediksi', 'error');
                 }
             }
 
@@ -48,6 +52,34 @@ async function loadContent(target, filename) {
     }
 }
 
+// Fungsi untuk memuat beberapa script secara berurutan
+function loadScripts(scripts) {
+    return new Promise((resolve, reject) => {
+        let loaded = 0;
+        
+        const loadNext = () => {
+            if (loaded >= scripts.length) {
+                resolve();
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = scripts[loaded];
+            script.onload = () => {
+                loaded++;
+                loadNext();
+            };
+            script.onerror = (err) => {
+                reject(`Gagal memuat script: ${scripts[loaded]}`);
+            };
+            
+            // UNCOMMENT BARIS INI
+            document.head.appendChild(script);
+        };
+        
+        loadNext();
+    });
+}
 // ===================== INISIALISASI MENU & ROUTING PANEL =====================
 document.addEventListener('DOMContentLoaded', function() {
     const menuItems = document.querySelectorAll('.menu-item[data-target]');
