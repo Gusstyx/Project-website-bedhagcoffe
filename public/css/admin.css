@@ -608,7 +608,150 @@ body {
     background: linear-gradient(135deg, #a88b6d, var(--secondary-color));
     transform: translateY(-3px);
 }
+/* Tombol Edit dan Delete dalam Tabel */
+.btn-sm {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: var(--border-radius-sm);
+    min-width: auto;
+}
 
+.btn-edit {
+    background: linear-gradient(135deg, var(--info-color), #2196f3);
+    color: white;
+    margin-right: 6px;
+    border: 1px solid rgba(91, 192, 222, 0.3);
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, var(--danger-color), #f44336);
+    color: white;
+    border: 1px solid rgba(217, 83, 79, 0.3);
+}
+
+.btn-edit:hover {
+    background: linear-gradient(135deg, #2196f3, var(--info-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, #f44336, var(--danger-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
+}
+
+.btn-edit:active, 
+.btn-delete:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+.recommendation-card {
+    background: #a3531a;
+    border-radius: 16px;
+    color: #fff;
+    box-shadow: 0 2px 8px #0002;
+    padding: 22px 28px;
+    margin-bottom: 22px;
+}
+.recommendation-card h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 19px;
+    color: #ffde93;
+    font-weight: bold;
+}
+.recommendation-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+.rec-item {
+    background: #d77f36;
+    padding: 16px 22px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    min-width: 150px;
+    flex: 1 1 150px;
+}
+.rec-item.wide {
+    min-width: 230px;
+    background: #ffc974;
+    color: #704100;
+    font-weight: bold;
+}
+.rec-label {
+    font-size: 13px;
+    opacity: 0.93;
+    margin-bottom: 5px;
+}
+.rec-value {
+    font-size: 20px;
+    font-weight: bold;
+}
+.prediction-table-section h4 {
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    font-size: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.data-table th, .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e6e6e6;
+    text-align: left;
+}
+.data-table th {
+    background: #ffe3c0;
+    color: #8e4400;
+    font-weight: 600;
+}
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+.status-habis {
+    color: #d03030;
+    font-weight: bold;
+}
+.status-aman {
+    color: #027d36;
+    font-weight: bold;
+}
+
+/* Ikon dalam tombol */
+.btn-edit i,
+.btn-delete i {
+    font-size: 0.9rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+/* Efek loading saat diklik */
+.btn-edit.loading i,
+.btn-delete.loading i {
+    display: none;
+}
+
+.btn-edit.loading::after,
+.btn-delete.loading::after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 /* =============================
    TABLE SYSTEM - ENHANCED
    ============================= */
@@ -1190,6 +1333,30 @@ body {
     .modal-content form {
         padding: 20px;
     }
+}
+
+/* Styling untuk chart container */
+.chart-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Styling untuk hasil prediksi */
+.prediction-section {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.recommendation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
 }
 
 @media (max-width: 480px) {

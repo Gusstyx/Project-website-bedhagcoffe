@@ -7,11 +7,14 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const pool = require('./db/mysql');
 
+// ROUTER IMPORT
 const produkRouter = require('./routes/produk-routes');
 const authRouter = require('./routes/auth');
 const manageMitraRouter = require('./routes/mitra-routes');
 const salesRouter = require('./routes/sales-routes');
 const prediksiRouter = require('./routes/prediksi-routes');
+const dokumenRouter = require('./routes/dokumen-routes');      // <== DOKUMEN
+const historyRouter = require('./routes/history-routes');      // <== HISTORY
 
 const app = express();
 
@@ -48,7 +51,7 @@ async function initializeDatabase() {
             )
         `);
 
-        // Admin default (optional)
+        // Admin default
         const [admin] = await connection.query(
             "SELECT id FROM users WHERE email = 'bedhagcoffe@mail.com'"
         );
@@ -72,15 +75,14 @@ async function initializeDatabase() {
             )
         `);
 
-        // SALES (Perhatikan: stok_awal WAJIB ada!)
+        // SALES
         await connection.query(`
             CREATE TABLE IF NOT EXISTS sales (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 produk_id INT NOT NULL,
-                tanggal_minggu DATE NOT NULL, -- Format YYYY-MM-DD (minggu ke berapa pun)
+                tanggal_minggu DATE NOT NULL,
                 stok_awal FLOAT NOT NULL,
                 stok_terjual FLOAT NOT NULL,
-                stok_akhir FLOAT AS (stok_awal - stok_terjual) STORED,
                 FOREIGN KEY (produk_id) REFERENCES produk(id)
             )
         `);
@@ -97,9 +99,21 @@ async function initializeDatabase() {
             )
         `);
 
+        // DOKUMEN
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS dokumen (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                judul VARCHAR(255) NOT NULL,
+                deskripsi TEXT,
+                url VARCHAR(255),
+                tanggal_upload DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
         // Uploads folder
         const uploadDir = path.join(__dirname, 'public', 'uploads');
         if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
     } catch (err) {
         console.error('❌ Gagal inisialisasi database:', err);
         process.exit(1);
@@ -114,6 +128,8 @@ app.use('/api/mitra', manageMitraRouter);
 app.use('/api/produk', produkRouter);
 app.use('/api/sales', salesRouter);
 app.use('/api/prediksi', prediksiRouter);
+app.use('/api/dokumen', dokumenRouter);    // <== DOKUMEN ROUTES
+app.use('/api/history', historyRouter);    // <== HISTORY ROUTES
 
 // ====== LOGOUT ROUTE ======
 app.post('/api/logout', (req, res) => {

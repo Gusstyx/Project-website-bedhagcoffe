@@ -2,18 +2,12 @@
 async function initPrediksiPanel() {
     console.log('Initializing Prediksi Panel...');
     
-    // Gunakan modul yang sudah diekspos
-    await window.salesModule.loadSalesData();
-    await window.historyModule.loadPredictionHistory();
-    
-    // Gunakan fungsi dari utils
-    window.populateProductOptions('filterProduk');
-    window.populateProductOptions('predictionProduct');
-    window.populateProductOptions('filterRiwayatProduk');
-    
-    window.salesModule.renderSalesData();
-    window.historyModule.renderHistoryData();
-    window.historyModule.updateAccuracyStats();
+    await window.loadSalesData();
+    await window.loadPredictionHistory();
+
+    window.renderSalesData();
+    window.renderHistoryData();
+    window.updateAccuracyStats();
 
     // Populate product options
     await populateProductOptions('filterProduk');
@@ -47,8 +41,8 @@ function setupEventListeners() {
         }
     });
 
-    document.getElementById('filterTanggal')?.addEventListener('change', filterSalesData);
-    document.getElementById('filterProduk')?.addEventListener('change', filterSalesData);
+    document.getElementById('filterTanggal').addEventListener('change', filterData);
+    document.getElementById('filterProduk').addEventListener('change', filterData);
     document.getElementById('filterRiwayatProduk')?.addEventListener('change', filterHistoryData);
     document.getElementById('filterStatus')?.addEventListener('change', filterHistoryData);
     document.getElementById('runPredictionBtn')?.addEventListener('click', runPrediction);
