@@ -101,24 +101,30 @@ function renderSalesData(data = filteredSalesData) {
 // ========== MODAL EDIT ==========
 function showEditModal(item) {
     document.getElementById('editId').value = item.id;
-    document.getElementById('editTanggal').value = item.tanggal_minggu;
     document.getElementById('editStokAwal').value = item.stok_awal;
     document.getElementById('editStokTerjual').value = item.stok_terjual;
+    
+    // Tambahkan hidden fields untuk produk_id dan tanggal_minggu
+    document.getElementById('editProdukId').value = item.produk_id;
+    document.getElementById('editTanggalMinggu').value = item.tanggal_minggu;
+    
+    // Nonaktifkan pilihan produk
     const selectProduk = document.getElementById('editProduk');
     selectProduk.innerHTML = '';
     for (const [id, name] of Object.entries(window.PRODUCT_MAP)) {
         selectProduk.innerHTML += `<option value="${id}" ${id == item.produk_id ? 'selected' : ''}>${name}</option>`;
     }
+    selectProduk.disabled = true; // Nonaktifkan input produk
+    
     document.getElementById('editSalesModal').style.display = 'flex';
 }
-function hideEditModal() {
-    document.getElementById('editSalesModal').style.display = 'none';
-}
+
 document.getElementById('formEditSales').onsubmit = async function(e) {
     e.preventDefault();
     const id = document.getElementById('editId').value;
-    const produk_id = document.getElementById('editProduk').value;
-    const tanggal_minggu = document.getElementById('editTanggal').value;
+    // Gunakan nilai dari hidden fields
+    const produk_id = document.getElementById('editProdukId').value;
+    const tanggal_minggu = document.getElementById('editTanggalMinggu').value;
     const stok_awal = parseFloat(document.getElementById('editStokAwal').value);
     const stok_terjual = parseFloat(document.getElementById('editStokTerjual').value);
 
@@ -126,19 +132,17 @@ document.getElementById('formEditSales').onsubmit = async function(e) {
         Swal.fire('Error', 'Stok terjual tidak boleh lebih dari stok awal', 'error');
         return;
     }
-    const updatedData = { produk_id, tanggal_minggu, stok_awal, stok_terjual };
+    
+    // Hanya kirim stok_awal dan stok_terjual
+    const updatedData = { stok_awal, stok_terjual };
+    
     try {
         const response = await fetch(`/api/sales/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedData)
         });
-        const resJson = await response.json();
-        if (!resJson.success) throw new Error(resJson.message || 'Gagal memperbarui data');
-        await loadSalesData(); // Fetch ulang dari server!
-        hideEditModal();
-        Swal.fire('Berhasil', 'Data berhasil diperbarui', 'success');
-    } catch (err) {
+        } catch (err) {
         Swal.fire('Gagal', 'Gagal memperbarui data: ' + err.message, 'error');
     }
 };
@@ -177,7 +181,8 @@ async function handleAddSalesData(event) {
         closeAddSalesModal();
         Swal.fire('Berhasil', 'Data berhasil ditambahkan', 'success');
         await loadSalesData();
-    } catch (err) {
+    }
+    catch (err) {
         Swal.fire('Gagal', 'Gagal menambah data: ' + err.message, 'error');
     }
 }
@@ -269,6 +274,10 @@ function formatDate(str) {
         "Juli","Agustus","September","Oktober","November","Desember"
     ];
     return `${parseInt(day)} ${namaBulan[parseInt(month)-1]} ${year}`;
+}
+
+function hideEditModal() {
+    document.getElementById('editSalesModal').style.display = 'none';
 }
 
 // ========== WINDOW BIND ==========

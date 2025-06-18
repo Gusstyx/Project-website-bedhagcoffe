@@ -133,8 +133,7 @@ async function loadProducts() {
                 </td>
             </tr>
         `;
-    });
-    setProductTableEvents(data);
+    });    setProductTableEvents(data);
 }
 
 function setProductTableEvents(productList) {
@@ -168,7 +167,7 @@ function setProductTableEvents(productList) {
     document.querySelectorAll('.delete-product').forEach(btn => {
         btn.onclick = async () => {
             if (confirm('Yakin hapus produk ini?')) {
-                await fetch(`/api/produk/${btn.dataset.id}`, {method: 'DELETE'});
+                await fetch(`/api/produk/${btn.dataset.id}`, { method: 'DELETE' });
                 loadProducts();
             }
         }
