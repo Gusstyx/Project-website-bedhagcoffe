@@ -1,25 +1,30 @@
-let salesData = [];
-let filteredSalesData = [];
+// Mengubah deklarasi variabel global menjadi properti window untuk menghindari konflik 'already been declared'
+window.salesData = window.salesData || [];
+window.filteredSalesData = window.filteredSalesData || [];
 window.PRODUCT_MAP = window.PRODUCT_MAP || {};
 
 // ========== LOAD PRODUCT MAP ==========
+// Memuat data produk dari API dan memetakannya ke PRODUCT_MAP
 async function loadProductMap() {
     try {
         const response = await fetch('/api/produk');
         if (!response.ok) throw new Error('Gagal load produk');
         const products = await response.json();
-        window.PRODUCT_MAP = {};
+        window.PRODUCT_MAP = {}; // Reset PRODUCT_MAP setiap kali dimuat
         products.forEach(p => window.PRODUCT_MAP[p.id] = p.nama);
     } catch (err) {
+        // Jika gagal memuat, pastikan PRODUCT_MAP tetap objek kosong
         window.PRODUCT_MAP = {};
+        Swal.fire('Gagal', 'Gagal memuat daftar produk: ' + err.message, 'error');
     }
 }
 
 // ========== LOAD SALES DATA ==========
+// Memuat semua data penjualan dari API
 async function loadSalesData() {
     try {
         const response = await fetch('/api/sales');
-        salesData = await response.json();        // <-- assign ke global salesData!
+        window.salesData = await response.json();        // <-- assign ke global salesData!
         filterData();                             // <-- filter dan render otomatis (gunakan filter yang aktif)
         populateFilterOptions();                  // <-- refresh isi filter bulan & produk
     } catch (error) {
@@ -28,9 +33,10 @@ async function loadSalesData() {
 }
 
 // ========== POPULATE FILTER OPTION ==========
+// Mengisi opsi filter untuk tanggal (bulan) dan produk
 function populateFilterOptions() {
     const selectTanggal = document.getElementById('filterTanggal');
-    const bulanList = [...new Set(salesData.map(item => item.tanggal_minggu.slice(0, 7)))];
+    const bulanList = [...new Set(window.salesData.map(item => item.tanggal_minggu.slice(0, 7)))].sort(); // Urutkan bulan
     selectTanggal.innerHTML = `<option value="">Semua Tanggal</option>`;
     bulanList.forEach(bln => {
         const [year, month] = bln.split('-');
@@ -43,37 +49,43 @@ function populateFilterOptions() {
 
     const selectProduk = document.getElementById('filterProduk');
     selectProduk.innerHTML = `<option value="">Semua Produk</option>`;
-    for (const [id, name] of Object.entries(window.PRODUCT_MAP || {})) {
+    // Urutkan produk berdasarkan nama
+    const sortedProducts = Object.entries(window.PRODUCT_MAP || {}).sort(([,nameA], [,nameB]) => nameA.localeCompare(nameB));
+    for (const [id, name] of sortedProducts) {
         selectProduk.innerHTML += `<option value="${id}">${name}</option>`;
     }
 }
 
 // ========== FILTERING ==========
+// Memfilter data penjualan berdasarkan pilihan filter
 function filterData() {
     const filterBulan = document.getElementById('filterTanggal').value;
     const filterProduk = document.getElementById('filterProduk').value;
-    filteredSalesData = salesData.filter(item => {
+    window.filteredSalesData = window.salesData.filter(item => {
         const itemBulan = item.tanggal_minggu.slice(0, 7);
         const matchBulan = !filterBulan || itemBulan === filterBulan;
         const matchProduk = !filterProduk || String(item.produk_id) === String(filterProduk);
         return matchBulan && matchProduk;
     });
-    renderSalesData(filteredSalesData);
+    renderSalesData(window.filteredSalesData);
 }
 
 // ========== RENDER TABLE ==========
-function renderSalesData(data = filteredSalesData) {
+// Merender data penjualan ke dalam tabel HTML
+function renderSalesData(data = window.filteredSalesData) {
     const tbody = document.getElementById('salesTableBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
+    if (!tbody) return; // Pastikan tbody ada
+    tbody.innerHTML = ''; // Kosongkan isi tabel
+
     if (data.length === 0) {
+        // Tampilkan pesan jika tidak ada data
         tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px; color: #666;">
             <i class="fas fa-inbox"></i><br />Belum ada data penjualan</td></tr>`;
         return;
     }
     data.forEach((item, index) => {
         const efficiency = ((item.stok_terjual / item.stok_awal) * 100).toFixed(1);
-        const akurasi = efficiency;
+        const akurasi = efficiency; // Menggunakan efisiensi sebagai akurasi
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
@@ -99,6 +111,7 @@ function renderSalesData(data = filteredSalesData) {
 }
 
 // ========== MODAL EDIT ==========
+// Menampilkan modal edit dengan data item yang dipilih
 function showEditModal(item) {
     document.getElementById('editId').value = item.id;
     document.getElementById('editStokAwal').value = item.stok_awal;
@@ -108,7 +121,7 @@ function showEditModal(item) {
     document.getElementById('editProdukId').value = item.produk_id;
     document.getElementById('editTanggalMinggu').value = item.tanggal_minggu;
     
-    // Nonaktifkan pilihan produk
+    // Nonaktifkan pilihan produk di modal edit
     const selectProduk = document.getElementById('editProduk');
     selectProduk.innerHTML = '';
     for (const [id, name] of Object.entries(window.PRODUCT_MAP)) {
@@ -116,14 +129,21 @@ function showEditModal(item) {
     }
     selectProduk.disabled = true; // Nonaktifkan input produk
     
-    document.getElementById('editSalesModal').style.display = 'flex';
+    // Menggunakan window.openModal dari admin.js
+    if (typeof window.openModal === 'function') {
+        window.openModal('editSalesModal');
+    } else {
+        document.getElementById('editSalesModal').style.display = 'flex'; // Fallback jika window.openModal tidak ada
+    }
 }
 
+// Event handler saat form edit disubmit
 document.getElementById('formEditSales').onsubmit = async function(e) {
     e.preventDefault();
     const id = document.getElementById('editId').value;
     // Gunakan nilai dari hidden fields
-    const produk_id = document.getElementById('editProdukId').value;
+    // PASTIKAN produk_id DIUBAH KE INTEGER
+    const produk_id = parseInt(document.getElementById('editProdukId').value, 10);
     const tanggal_minggu = document.getElementById('editTanggalMinggu').value;
     const stok_awal = parseFloat(document.getElementById('editStokAwal').value);
     const stok_terjual = parseFloat(document.getElementById('editStokTerjual').value);
@@ -133,8 +153,8 @@ document.getElementById('formEditSales').onsubmit = async function(e) {
         return;
     }
     
-    // Hanya kirim stok_awal dan stok_terjual
-    const updatedData = { stok_awal, stok_terjual };
+    // Kirim semua data yang diperlukan untuk update, termasuk produk_id dan tanggal_minggu
+    const updatedData = { produk_id, tanggal_minggu, stok_awal, stok_terjual };
     
     try {
         const response = await fetch(`/api/sales/${id}`, {
@@ -142,12 +162,24 @@ document.getElementById('formEditSales').onsubmit = async function(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedData)
         });
-        } catch (err) {
+        const resJson = await response.json();
+        if (!resJson.success) throw new Error(resJson.message || 'Gagal memperbarui data');
+        
+        // Menggunakan window.closeModal dari admin.js
+        if (typeof window.closeModal === 'function') {
+            window.closeModal('editSalesModal');
+        } else {
+            hideEditModal(); // Fallback
+        }
+        Swal.fire('Berhasil', 'Data berhasil diperbarui', 'success');
+        await loadSalesData(); // Muat ulang data untuk menampilkan perubahan
+    } catch (err) {
         Swal.fire('Gagal', 'Gagal memperbarui data: ' + err.message, 'error');
     }
 };
 
 // ========== TAMBAH DATA ==========
+// Menangani penambahan data penjualan baru
 async function handleAddSalesData(event) {
     event.preventDefault();
     const produk_id = document.getElementById('modalProduct').value;
@@ -178,7 +210,13 @@ async function handleAddSalesData(event) {
         const resJson = await response.json();
         if (!resJson.success) throw new Error(resJson.message || 'Gagal menyimpan data');
         document.getElementById('addSalesForm').reset();
-        closeAddSalesModal();
+        
+        // Menggunakan window.closeModal dari admin.js
+        if (typeof window.closeModal === 'function') {
+            window.closeModal('addSalesModal');
+        } else {
+            closeAddSalesModal(); // Fallback
+        }
         Swal.fire('Berhasil', 'Data berhasil ditambahkan', 'success');
         await loadSalesData();
     }
@@ -188,6 +226,7 @@ async function handleAddSalesData(event) {
 }
 
 // ========== HAPUS DATA ==========
+// Menampilkan konfirmasi hapus data
 function deleteSalesData(id) {
     Swal.fire({
         title: 'Konfirmasi Hapus',
@@ -204,6 +243,7 @@ function deleteSalesData(id) {
         }
     });
 }
+// Melakukan penghapusan data setelah konfirmasi
 async function confirmDeleteSalesData(id) {
     try {
         const response = await fetch(`/api/sales/${id}`, { method: 'DELETE' });
@@ -217,13 +257,14 @@ async function confirmDeleteSalesData(id) {
 }
 
 // ========== EXPORT DATA ==========
+// Mengekspor data penjualan ke format CSV
 function exportSalesData() {
-    if (filteredSalesData.length === 0) {
+    if (window.filteredSalesData.length === 0) {
         Swal.fire('Tidak ada data untuk diekspor', '', 'warning');
         return;
     }
     const headers = ['ID', 'Produk', 'Tanggal Minggu', 'Stok Awal (kg)', 'Stok Terjual (kg)', 'Stok Akhir (kg)', 'Efisiensi (%)'];
-    const csvData = filteredSalesData.map(item => [
+    const csvData = window.filteredSalesData.map(item => [
         item.id,
         item.produk_nama,
         item.tanggal_minggu,
@@ -232,32 +273,67 @@ function exportSalesData() {
         item.stok_awal - item.stok_terjual,
         ((item.stok_terjual / item.stok_awal) * 100).toFixed(1)
     ]);
+    // Fungsi downloadCSV diasumsikan ada di tempat lain, atau bisa ditambahkan di sini
     downloadCSV([headers, ...csvData], 'data_penjualan_kopi.csv');
     Swal.fire('Berhasil', 'Data berhasil diekspor', 'success');
 }
 
-// ========== MODAL TAMBAH ==========
-function openAddSalesModal() {
-    const modal = document.getElementById('addSalesModal');
-    if (modal) {
-        modal.style.display = 'block';
-        loadProductOptionsToModal && loadProductOptionsToModal();
-    } else {
-        console.error('Modal element with ID "addSalesModal" not found.');
+// Fungsi dummy untuk downloadCSV (Anda mungkin memiliki implementasi sebenarnya di tempat lain)
+function downloadCSV(data, filename) {
+    const csvContent = data.map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) { // feature detection
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }
-function closeAddSalesModal() {
-    const modal = document.getElementById('addSalesModal');
-    if (modal) modal.style.display = 'none';
+
+
+// ========== MODAL TAMBAH ==========
+// Membuka modal tambah data penjualan baru
+function openAddSalesModal() {
+    // Menggunakan window.openModal dari admin.js
+    if (typeof window.openModal === 'function') {
+        window.openModal('addSalesModal');
+        // loadProductOptionsToModal diasumsikan ada dan mengisi dropdown produk di modal tambah
+        loadProductOptionsToModal && loadProductOptionsToModal(); 
+    } else {
+        const modal = document.getElementById('addSalesModal');
+        if (modal) {
+            modal.style.display = 'block'; // Fallback
+            loadProductOptionsToModal && loadProductOptionsToModal(); 
+        } else {
+            console.error('Modal element with ID "addSalesModal" not found.');
+        }
+    }
 }
+// Menutup modal tambah data penjualan
+function closeAddSalesModal() {
+    // Menggunakan window.closeModal dari admin.js
+    if (typeof window.closeModal === 'function') {
+        window.closeModal('addSalesModal');
+    } else {
+        const modal = document.getElementById('addSalesModal');
+        if (modal) modal.style.display = 'none'; // Fallback
+    }
+}
+// Menutup modal generik (jika ada) - Ini mungkin duplikat, tergantung bagaimana admin.js menangani closeModal
+// Saya akan biarkan ini dulu, tapi perhatikan potensi konflik
 function closeModal() {
-    const modal = document.getElementById('dynamicModal');
+    const modal = document.getElementById('dynamicModal'); // Asumsi ini ID modal umum
     if (modal) modal.style.display = 'none';
 }
 
 // ========== EDIT DATA (BUKA MODAL) ==========
+// Mencari item penjualan berdasarkan ID dan menampilkan modal edit
 function editSalesData(id) {
-    const item = salesData.find(s => s.id === id);
+    const item = window.salesData.find(s => s.id === id);
     if (!item) {
         Swal.fire('Error', 'Data tidak ditemukan', 'error');
         return;
@@ -266,6 +342,7 @@ function editSalesData(id) {
 }
 
 // ========== UTIL FORMAT DATE ==========
+// Memformat string tanggal dari UCLA-MM-DD menjadi "DD Bulan UCLA"
 function formatDate(str) {
     if (!str) return '';
     const [year, month, day] = str.split('-');
@@ -276,11 +353,18 @@ function formatDate(str) {
     return `${parseInt(day)} ${namaBulan[parseInt(month)-1]} ${year}`;
 }
 
+// Menutup modal edit data penjualan
 function hideEditModal() {
-    document.getElementById('editSalesModal').style.display = 'none';
+    // Menggunakan window.closeModal dari admin.js
+    if (typeof window.closeModal === 'function') {
+        window.closeModal('editSalesModal');
+    } else {
+        document.getElementById('editSalesModal').style.display = 'none'; // Fallback
+    }
 }
 
 // ========== WINDOW BIND ==========
+// Mengikat fungsi-fungsi ke objek window agar dapat diakses secara global di HTML
 window.loadProductMap = loadProductMap;
 window.loadSalesData = loadSalesData;
 window.renderSalesData = renderSalesData;
@@ -293,9 +377,11 @@ window.openAddSalesModal = openAddSalesModal;
 window.closeAddSalesModal = closeAddSalesModal;
 window.showEditModal = showEditModal;
 window.hideEditModal = hideEditModal;
+window.closeModal = closeModal; 
 
 // ========== INISIALISASI ==========
+// Fungsi inisialisasi yang dijalankan saat halaman dimuat
 (async function initSalesPage() {
-    await loadProductMap();
-    await loadSalesData();
+    await loadProductMap(); // Muat peta produk terlebih dahulu
+    await loadSalesData();  // Lalu muat data penjualan
 })();

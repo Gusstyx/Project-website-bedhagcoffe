@@ -1,3 +1,7 @@
+// ========================
+// FILE: public/js/mitra.js
+// ========================
+
 // --------- LOGOUT (AJAX + SweetAlert2) -----------
 function logout() {
     Swal.fire({
@@ -16,10 +20,7 @@ function logout() {
             })
             .then(response => {
                 if (response.ok) {
-                    // Bersihkan data login di client
-                    localStorage.removeItem('currentUser');
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userToken');
+                    localStorage.clear();
                     sessionStorage.clear();
                     window.location.href = 'index.html';
                 } else {
@@ -45,39 +46,34 @@ function initPanelNavigation() {
             item.addEventListener('click', logout);
             return;
         }
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             const target = this.getAttribute('data-target');
-            // Ganti panel aktif
             menuItems.forEach(menuItem => menuItem.classList.remove('active'));
             this.classList.add('active');
             panels.forEach(panel => panel.classList.remove('active'));
             const targetPanel = document.getElementById(target);
-            if (targetPanel) {
-                targetPanel.classList.add('active');
-            }
-            // Ganti judul halaman
+            if (targetPanel) targetPanel.classList.add('active');
             if (pageTitle && this.querySelector('span')) {
                 pageTitle.textContent = this.querySelector('span').textContent;
             }
-            // Tambahkan inisialisasi panel lain jika perlu
         });
     });
 }
 
-// --------- FILE UPLOAD (optional) ----------
+// --------- FILE UPLOAD (Drag & Drop Style) ----------
 function initFileUploads() {
     const fileUploads = document.querySelectorAll('.file-upload');
     fileUploads.forEach(upload => {
         const input = upload.querySelector('.file-input');
         upload.addEventListener('click', () => input.click());
-        upload.addEventListener('dragover', (e) => {
+        upload.addEventListener('dragover', e => {
             e.preventDefault();
             upload.style.borderColor = 'var(--primary-color)';
         });
         upload.addEventListener('dragleave', () => {
             upload.style.borderColor = '#ddd';
         });
-        upload.addEventListener('drop', (e) => {
+        upload.addEventListener('drop', e => {
             e.preventDefault();
             upload.style.borderColor = '#ddd';
             if (e.dataTransfer.files.length) {
@@ -96,7 +92,7 @@ function initFileUploads() {
             upload.appendChild(info);
         }
         if (input.files.length) {
-            info.textContent = input.files[0].name + ` (${formatFileSize(input.files[0].size)})`;
+            info.textContent = `${input.files[0].name} (${formatFileSize(input.files[0].size)})`;
         } else {
             info.textContent = '';
         }
@@ -109,8 +105,33 @@ function initFileUploads() {
     }
 }
 
-// --------- INISIALISASI SAAT DOM READY -----------
+// --------- FETCH MITRA DATA ----------
+async function fetchMitraData() {
+try {
+    const response = await fetch('/api/mitra/me');
+    if (!response.ok) {
+        Swal.fire('Gagal', 'Gagal memuat data mitra', 'error');
+        return;
+    }
+
+    const mitra = await response.json();
+
+    // Tampilkan data ke elemen teks
+    document.getElementById('mitra-name').innerText = mitra.name || '-';
+    document.getElementById('mitra-email').innerText = mitra.email || '-';
+
+    // Update header jika perlu
+    document.querySelector('.user-name').textContent = mitra.name || 'Mitra';
+    document.querySelector('.user-avatar').textContent = mitra.name ? mitra.name.charAt(0).toUpperCase() : 'M';
+    } catch (err) {
+        console.error('Error:', err);
+        Swal.fire('Error', 'Tidak dapat menghubungi server.', 'error');
+    }
+}
+
+// --------- INITIALIZE WHEN DOM READY ----------
 document.addEventListener('DOMContentLoaded', () => {
     initPanelNavigation();
     initFileUploads();
+    fetchMitraData();
 });

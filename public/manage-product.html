@@ -1,219 +1,4 @@
-<style>
-    /* Import the existing admin.css styles */
-    @import url('css/admin.css');
-    
-    /* Enhanced Modal Backdrop Styles */
-    .modal-backdrop {
-        position: fixed;
-        top: -20px;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(8px);
-        z-index: 1000;
-        display: none;
-        animation: fadeIn 0.3s ease-out;
-    }
-
-    .modal-backdrop.show {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal {
-        top : 0%;
-        left: 0%;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        max-width: 600px;
-        width: 90%;
-        max-height: 90vh;
-        overflow: hidden;
-        transform: scale(0.8);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-    }
-
-    .modal-backdrop.show .modal {
-        transform: scale(1);
-    }
-
-    .modal-header {
-        padding: 25px 30px;
-        background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .modal-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .modal-close {
-        font-size: 1.8rem;
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        padding: 5px 10px;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-    }
-
-    .modal-close:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: rotate(90deg);
-    }
-
-    .modal-body {
-        padding: 30px;
-        max-height: 60vh;
-        overflow-y: auto;
-    }
-
-    .modal-footer {
-        padding: 25px 30px;
-        background: #f8f9fa;
-        border-top: 1px solid #e9ecef;
-        display: flex;
-        gap: 15px;
-        justify-content: flex-end;
-    }
-
-    /* Form Styles */
-    .form-group {
-        margin-bottom: 25px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #333;
-        font-size: 0.95rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 14px 16px;
-        border: 2px solid #e9ecef;
-        border-radius: 10px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: white;
-        font-family: inherit;
-    }
-
-    .form-control:focus {
-        border-color: #8B4513;
-        outline: none;
-        box-shadow: 0 0 0 4px rgba(139, 69, 19, 0.1);
-        transform: translateY(-2px);
-    }
-
-    .form-control:hover {
-        border-color: #D2691E;
-    }
-
-    /* Image Preview Styles */
-    #image-preview {
-        display: none;
-        margin-top: 12px;
-        max-width: 150px;
-        height: auto;
-        border-radius: 10px;
-        border: 2px solid #e9ecef;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Button Styles */
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 14px 28px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-decoration: none;
-        white-space: nowrap;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #5D4037 0%, #8B4513 100%);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
-    }
-
-    .btn-secondary {
-        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-        transform: translateY(-3px);
-    }
-
-    /* File Upload Styles */
-    .file-upload-wrapper {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-
-    .file-upload-input {
-        position: absolute;
-        left: -9999px;
-        opacity: 0;
-    }
-
-    .file-upload-label {
-        display: block;
-        padding: 14px 16px;
-        border: 2px dashed #D2691E;
-        border-radius: 10px;
-        background: #f8f9fa;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-        color: #8B4513;
-        font-weight: 600;
-    }
-
-    .file-upload-label:hover {
-        border-color: #8B4513;
-        background: #fff3e0;
-    }
-</style>
+<!-- Menghapus blok <style> inline yang menimpa gaya admin.css -->
 
 <div class="panel-header">
     <div class="panel-title">Manajemen Produk Kopi</div>
@@ -241,11 +26,13 @@
 </div>
 
 <div class="modal-backdrop" id="product-modal-backdrop">
-    <div class="modal" id="product-modal">
-        <div class="modal-header" style="display: flex; align-items: center;">
-            <div class="modal-title" id="product-modal-title">Tambah Produk</div>
-            <button class="modal-close" id="close-product-modal" title="Tutup"
-                style="font-size:1.5em; background:none; border:none; margin-left:auto;">&times;</button>
+    <!-- Mengubah class="modal" menjadi class="modal-content" untuk konsistensi -->
+    <div class="modal-content" id="product-modal">
+        <div class="modal-header">
+            <!-- Menggunakan class="modal-title" dan id="product-modal-title" -->
+            <h3 class="modal-title" id="product-modal-title">Tambah Produk</h3>
+            <!-- Mengubah class="modal-close" menjadi class="close-button" dan menghapus gaya inline -->
+            <span class="close-button" id="close-product-modal" onclick="closeModal('product-modal-backdrop')">&times;</span>
         </div>
         <div class="modal-body">
             <form id="product-form" enctype="multipart/form-data">
@@ -270,7 +57,7 @@
             </form>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" id="cancel-product" style="margin-right:8px;">Batal</button>
+            <button class="btn btn-secondary" id="cancel-product">Batal</button>
             <button class="btn btn-primary" id="save-product">Simpan</button>
         </div>
     </div>

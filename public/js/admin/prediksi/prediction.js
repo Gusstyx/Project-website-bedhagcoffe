@@ -1,5 +1,5 @@
 // prediction.js
-let currentChart = null; // Ini tetap bisa digunakan jika Anda suka, tapi window.predictionChart juga bekerja
+window.currentChart = window.currentChart || null; // Mengubah deklarasi menjadi properti window
 
 /**
  * Ambil daftar produk dan render ke <select id="predictionProduct">
@@ -8,7 +8,7 @@ function loadProductDropdown() {
   fetch('/api/prediksi/produk')
     .then(res => res.json())
     .then(products => {
-      window.PRODUCT_MAP = {};
+      window.PRODUCT_MAP = window.PRODUCT_MAP || {}; // Pastikan PRODUCT_MAP didefinisikan jika belum
       const sel = document.getElementById('predictionProduct');
       if (!sel) return;
       sel.innerHTML = '<option value="">-- Pilih Produk --</option>';

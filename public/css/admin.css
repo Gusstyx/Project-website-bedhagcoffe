@@ -65,6 +65,7 @@ body {
     transition: all 0.3s ease;
     position: relative;
     z-index: 100;
+    box-shadow: var(--shadow-strong); /* Tambahkan shadow pada sidebar */
 }
 
 .sidebar-header {
@@ -100,11 +101,13 @@ body {
 .menu-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
     border-left-color: var(--secondary-color);
+    transform: translateX(5px); /* Efek hover lebih halus */
 }
 
 .menu-item.active {
     background-color: rgba(255, 255, 255, 0.2);
     border-left-color: var(--secondary-color);
+    font-weight: 600; /* Lebih tebal saat aktif */
 }
 
 .menu-item span {
@@ -121,7 +124,7 @@ body {
 .content {
     flex: 1;
     padding: 20px;
-    background-color: transparent;
+    background-color: transparent; /* Tetap transparan untuk efek gradien body */
     overflow-y: auto;
     position: relative;
     z-index: 10;
@@ -135,9 +138,10 @@ body {
     margin-bottom: 30px;
     padding: 20px;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius-xl); /* Gunakan variabel */
+    box-shadow: var(--shadow-medium); /* Gunakan variabel */
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Border halus */
 }
 
 .header h1 {
@@ -166,6 +170,7 @@ body {
     justify-content: center;
     color: var(--light-color);
     font-weight: bold;
+    box-shadow: var(--shadow-soft); /* Tambah shadow */
 }
 
 /* =============================
@@ -175,16 +180,18 @@ body {
 /* Panel Base Styles */
 .panel {
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius-xl); /* Gunakan variabel */
+    box-shadow: var(--shadow-strong); /* Gunakan variabel */
     backdrop-filter: blur(10px);
     margin-bottom: 30px;
     display: none;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Border halus */
 }
 
 .panel.active {
     display: block;
+    animation: fadeIn 0.5s ease-out; /* Animasi fade-in saat aktif */
 }
 
 .panel-header {
@@ -195,6 +202,7 @@ body {
     align-items: center;
     background: var(--coffee-brown);
     color: white;
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0; /* Corner radius atas saja */
 }
 
 .panel-title {
@@ -204,7 +212,7 @@ body {
 
 .panel-body {
     padding: 30px;
-    background: white;
+    background: white; /* Panel body putih */
     min-height: 800px;
 }
 /* =============================
@@ -232,16 +240,28 @@ body {
   width: 95vw;
   position: relative;
   padding: 0;
-  animation: prediksi-fadeInModal 0.28s cubic-bezier(.5,1.5,.5,1);
+  animation: fadeInScale 0.28s cubic-bezier(.5,1.5,.5,1); /* Animasi baru */
   overflow: hidden;
 }
+/* Keyframe untuk animasi modal baru */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 
 /* ========== Modal Header ========== */
 .prediksi-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(120deg, #d2691e 0%, #8b4513 100%);
+  background: linear-gradient(120deg, var(--coffee-light) 0%, var(--coffee-brown) 100%); /* Gunakan variabel */
   color: #fff;
   padding: 16px 26px;
   border-radius: 16px 16px 0 0;
@@ -287,7 +307,7 @@ body {
     width: 100%;
     min-height: 100vh;
     padding: 20px;
-    /* background: var(--gradient-primary); */
+    /* background: var(--gradient-primary); */ /* Biarkan body yang menangani background utama */
     position: relative;
 }
 
@@ -472,26 +492,29 @@ body {
     width: 100%;
     padding: 12px 15px;
     border: 2px solid #ddd;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     font-size: 1rem;
     transition: all 0.3s ease;
     background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) inset; /* Shadow halus */
 }
 
 .form-control:focus {
     border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.1);
+    box-shadow: 0 0 0 4px rgba(111, 78, 55, 0.15); /* Shadow fokus lebih menonjol */
 }
 
 .form-row {
     display: flex;
     margin: 0 -10px;
+    flex-wrap: wrap; /* Pastikan responsif */
 }
 
 .form-col {
     flex: 1;
     padding: 0 10px;
+    min-width: 280px; /* Tambah min-width untuk responsivitas form-col */
 }
 
 /* =============================
@@ -520,16 +543,18 @@ body {
 .filter-group input {
     padding: 12px;
     border: 2px solid var(--coffee-light);
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     font-size: 1em;
     background: white;
     transition: border-color 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) inset;
 }
 
 .filter-group select:focus,
 .filter-group input:focus {
     outline: none;
     border-color: var(--coffee-brown);
+    box-shadow: 0 0 0 4px rgba(139, 69, 19, 0.15);
 }
 
 .search-filter {
@@ -820,29 +845,74 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6); /* Sedikit lebih gelap */
     z-index: 1000;
-    display: none;
+    display: flex; /* Gunakan flexbox untuk centering */
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* Mulai dengan transparan */
+    visibility: hidden; /* Sembunyikan sepenuhnya */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .modal-backdrop.show {
-    display: block;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Modal content positioning */
-.modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.modal-content { /* Ganti .modal menjadi .modal-content untuk konsistensi dengan dokumen.html */
     background: white;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 500px;
+    border-radius: var(--border-radius-lg); /* Gunakan variabel */
+    padding: 30px; /* Padding lebih banyak */
+    max-width: 600px; /* Lebar maksimum yang sedikit lebih besar */
     width: 90%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-medium); /* Gunakan variabel */
     z-index: 1001;
-}/* =============================
+    transform: translateY(-20px); /* Animasi slide-in */
+    opacity: 0;
+    transition: all 0.3s ease-out; /* Transisi halus */
+    position: relative;
+}
+
+.modal-backdrop.show .modal-content {
+    transform: translateY(0); /* Posisi akhir saat terlihat */
+    opacity: 1;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.modal-header h3 {
+    font-size: 1.6rem;
+    color: var(--coffee-brown);
+    margin: 0;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s ease;
+    padding: 5px; /* Tambah padding untuk area klik */
+    line-height: 1; /* Pastikan ikon tidak terdistorsi */
+}
+
+.close-button:hover {
+    color: var(--danger-color);
+    transform: rotate(90deg); /* Animasi rotasi */
+}
+
+
+/* =============================
    BADGE SYSTEM - ENHANCED
    ============================= */
 
@@ -888,12 +958,13 @@ body {
 
 .alert {
     padding: 15px 20px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border: 1px solid transparent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Tambah shadow */
 }
 
 .alert-success {
@@ -933,11 +1004,12 @@ body {
 
 .card {
     background: white;
-    border-radius: 10px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 25px;
     margin-bottom: 20px;
     transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Border halus */
 }
 
 .card:hover {
@@ -954,7 +1026,7 @@ body {
 
 .stat-card {
     background: white;
-    border-radius: 12px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 25px;
     text-align: center;
@@ -1181,7 +1253,7 @@ body {
     gap: 10px;
     padding: 12px 20px;
     border: 2px dashed var(--coffee-light);
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     cursor: pointer;
     transition: all 0.3s ease;
     background: white;
@@ -1200,7 +1272,7 @@ body {
     border: 1px solid #ddd;
     padding: 25px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     min-height: 350px;
     margin-bottom: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -1224,6 +1296,10 @@ body {
     text-align: center;
     padding: 60px 40px;
     color: #666;
+    background: #fdfdfd; /* Latar belakang lebih cerah */
+    border-radius: var(--border-radius-lg);
+    border: 1px dashed rgba(139, 69, 19, 0.2); /* Border dashed */
+    margin-top: 20px;
 }
 
 .empty-state h3 {
@@ -1277,6 +1353,23 @@ body {
     .filter-group {
         min-width: unset;
     }
+    .sidebar { /* Sembunyikan sidebar di mobile atau tampilkan sebagai overlay */
+        width: 100%;
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100%;
+        transition: left 0.3s ease;
+    }
+    .sidebar.active { /* Kelas untuk menampilkan sidebar */
+        left: 0;
+    }
+    .content {
+        margin-left: 0; /* Pastikan content memenuhi lebar */
+    }
+    .header {
+        border-radius: var(--border-radius-md); /* Header lebih kecil di mobile */
+    }
 }
 
 @media (max-width: 768px) {
@@ -1325,38 +1418,19 @@ body {
         padding: 12px 8px;
     }
     
-    .modal-content {
+    .modal-content { /* Sesuaikan modal agar lebih responsif */
         width: 95%;
-        margin: 10% auto;
+        margin: 5% auto; /* Posisikan lebih baik */
+        padding: 20px;
     }
     
     .modal-content form {
-        padding: 20px;
+        padding: 0; /* Hapus padding duplikat */
     }
-}
-
-/* Styling untuk chart container */
-.chart-container {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* Styling untuk hasil prediksi */
-.prediction-section {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.recommendation-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
+    .form-col {
+        min-width: 100%; /* Satu kolom di mobile */
+        padding: 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1408,9 +1482,11 @@ body {
         font-size: 1rem;
     }
     
-    .modal-content h2 {
-        padding: 20px;
+    .modal-header h3 { /* Sesuaikan judul modal di mobile */
         font-size: 1.2rem;
+    }
+    .close-button {
+        font-size: 1.5rem;
     }
 }
 
@@ -1557,7 +1633,7 @@ body {
 .loading-content {
     background: white;
     padding: 30px;
-    border-radius: 12px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
@@ -1581,13 +1657,14 @@ body {
     background: white;
     border: 2px solid #ddd;
     padding: 10px 15px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-width: 150px;
     transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) inset;
 }
 
 .dropdown-toggle:hover {
@@ -1601,7 +1678,7 @@ body {
     right: 0;
     background: white;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     max-height: 200px;
@@ -1682,7 +1759,7 @@ body {
     width: 100%;
     height: 20px;
     background-color: #e9ecef;
-    border-radius: 10px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     overflow: hidden;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
@@ -1771,11 +1848,12 @@ body {
     border: 1px solid #ddd;
     background: white;
     color: #666;
-    border-radius: 6px;
+    border-radius: var(--border-radius-sm); /* Gunakan variabel */
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
     font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Tambah shadow */
 }
 
 .pagination-btn:hover {
@@ -1788,6 +1866,7 @@ body {
     background: var(--coffee-brown);
     color: white;
     border-color: var(--coffee-brown);
+    box-shadow: var(--shadow-soft);
 }
 
 .pagination-btn:disabled {
@@ -1795,7 +1874,7 @@ body {
     cursor: not-allowed;
 }
 
-.pagination-info {
+.page-info {
     margin: 0 15px;
     font-size: 0.9rem;
     color: #666;
@@ -1883,9 +1962,13 @@ body {
 .btn:focus,
 .form-control:focus,
 .menu-item:focus,
-.tab-button:focus {
-    outline: 2px solid var(--coffee-brown);
-    outline-offset: 2px;
+.tab-button:focus,
+.close-button:focus, /* Tambah fokus untuk tombol close modal */
+.dropdown-toggle:focus,
+.pagination-btn:focus {
+    outline: 3px solid rgba(139, 69, 19, 0.5);
+    outline-offset: 3px; /* Tambah offset */
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2); /* Tambah shadow saat fokus */
 }
 
 /* Skip to content link */
@@ -1944,7 +2027,7 @@ body {
     height: 60px;
     background: #f8f9fa;
     border: 2px dashed #dee2e6;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1957,7 +2040,7 @@ body {
     width: 60px;
     height: 60px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm); /* Gunakan variabel */
     border: 1px solid #eee;
 }
 
@@ -1969,6 +2052,11 @@ body {
     :root {
         --light-color: #1a1a1a;
         --dark-color: #f5f5f5;
+        /* Pertahankan warna kopi agar tidak terlalu gelap dalam dark mode */
+        --coffee-brown: #9b6d47; /* Sedikit lebih terang */
+        --coffee-light: #e09f5a; /* Sedikit lebih terang */
+        --coffee-dark: #4d3326;
+        --coffee-cream: #ffecc6;
     }
     
     body {
@@ -1977,21 +2065,32 @@ body {
     }
     
     .panel,
-    .modal,
+    .modal-content, /* Ganti .modal */
     .card,
-    .data-table {
+    .data-table,
+    .form-control,
+    .filter-group select,
+    .filter-group input,
+    .dropdown-toggle,
+    .dropdown-menu,
+    .loading-content,
+    .pagination-btn,
+    .empty-state { /* Tambah empty-state */
         background: #2a2a2a;
         color: var(--dark-color);
+        border-color: rgba(255, 255, 255, 0.1); /* Border lebih terang di dark mode */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* Shadow lebih gelap */
     }
-    
-    .form-control {
-        background: #333;
-        border-color: #555;
-        color: var(--dark-color);
+
+    .modal-header,
+    .panel-header {
+        background: linear-gradient(120deg, var(--coffee-light) 0%, var(--coffee-brown) 100%);
+        border-bottom-color: rgba(255, 255, 255, 0.15);
     }
     
     .data-table th {
         background: #333;
+        border-bottom-color: #555;
     }
     
     .data-table td {
@@ -1999,7 +2098,31 @@ body {
     }
     
     .data-table tr:hover {
+        background: #3a3a3a; /* Hover state lebih gelap */
+    }
+
+    .form-control,
+    .filter-group select,
+    .filter-group input {
         background: #333;
+        border-color: #555;
+        color: var(--dark-color);
+    }
+
+    .form-control:focus,
+    .filter-group select:focus,
+    .filter-group input:focus {
+        border-color: var(--coffee-light);
+        box-shadow: 0 0 0 4px rgba(224, 159, 90, 0.25);
+    }
+
+    .close-button {
+        color: #ccc;
+    }
+
+    .alert {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.15);
     }
 }
 
@@ -2140,30 +2263,36 @@ body {
 
 .pagination button {
     padding: 10px 18px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md); /* Gunakan variabel */
     background-color: white;
     border: 1px solid #dee2e6;
-    color: #4b6cb7;
+    color: var(--coffee-brown); /* Gunakan variabel */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: var(--shadow-soft); /* Tambah shadow */
 }
 
 .pagination button:hover:not(:disabled) {
-    background-color: #4b6cb7;
+    background-color: var(--coffee-light); /* Gunakan variabel */
     color: white;
-    border-color: #4b6cb7;
+    border-color: var(--coffee-light); /* Gunakan variabel */
+    transform: translateY(-2px); /* Efek hover */
 }
 
 .pagination button.active {
-    background-color: #4b6cb7;
+    background-color: var(--coffee-brown); /* Gunakan variabel */
     color: white;
-    border-color: #4b6cb7;
+    border-color: var(--coffee-brown); /* Gunakan variabel */
+    box-shadow: var(--shadow-medium); /* Shadow aktif */
 }
 
 .pagination button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background-color: #f1f1f1; /* Warna disabled */
+    color: #a0a0a0; /* Warna teks disabled */
+    box-shadow: none;
 }
 
 .page-info {

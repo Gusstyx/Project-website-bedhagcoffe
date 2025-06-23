@@ -1,3 +1,8 @@
+/* =============================
+   MITRA.CSS - COMPLETE COFFEE MANAGEMENT SYSTEM
+   ============================= */
+
+/* CSS VARIABLES - Imported from admin.css for consistency */
 :root {
     --primary-color: #6f4e37;
     --secondary-color: #c0a080;
@@ -8,31 +13,58 @@
     --success-color: #5cb85c;
     --warning-color: #f0ad4e;
     --info-color: #5bc0de;
+    --coffee-brown: #8B4513;
+    --coffee-light: #D2691E;
+    --coffee-cream: #FFE4B5;
+    --coffee-dark: #5D4037;
+    --coffee-gold: #B8860B;
+    --gradient-primary: linear-gradient(135deg, var(--coffee-brown) 0%, var(--coffee-light) 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-brown) 100%);
+    --shadow-soft: 0 8px 32px rgba(139, 69, 19, 0.15);
+    --shadow-medium: 0 12px 40px rgba(139, 69, 19, 0.25);
+    --shadow-strong: 0 16px 48px rgba(139, 69, 19, 0.35);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 20px;
 }
 
+/* GLOBAL RESET - Consistent with admin.css */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background-color: var(--light-color);
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--gradient-primary); /* Consistent background */
     color: var(--dark-color);
+    min-height: 100vh;
+    line-height: 1.6;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
+
+/* =============================
+   MAIN LAYOUT - SIDEBAR & CONTENT - Consistent with admin.css
+   ============================= */
 
 .wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sidebar Styles */
+/* SIDEBAR STYLES */
 .sidebar {
     width: 250px;
-    background-color: var(--dark-color);
+    background-color: var(--coffee-brown);
     color: var(--light-color);
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
+    box-shadow: var(--shadow-strong);
 }
 
 .sidebar-header {
@@ -60,15 +92,35 @@ body {
     padding: 12px 20px;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: block;
+    display: flex; /* Changed from block to flex for icon alignment */
+    align-items: center;
     border-left: 4px solid transparent;
 }
 
 .menu-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
     border-left-color: var(--secondary-color);
+    transform: translateX(5px);
 }
 
+.menu-item.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left-color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* Added for consistency with admin.css menu item structure */
+.menu-item span {
+    margin-left: 10px;
+}
+
+.menu-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+/* These specific input/label styles were causing issues in Mitra's menu, removed for consistency */
 .menu-item input[type="checkbox"] {
     display: none;
 }
@@ -85,31 +137,34 @@ body {
     color: var(--secondary-color);
 }
 
-.menu-item.active {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-left-color: var(--secondary-color);
-}
-
-/* Main Content Styles */
+/* MAIN CONTENT AREA */
 .content {
     flex: 1;
     padding: 20px;
-    background-color: var(--light-color);
+    background-color: transparent; /* Keep transparent for body gradient */
     overflow-y: auto;
+    position: relative;
+    z-index: 10;
 }
 
+/* HEADER STYLES */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-medium);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .header h1 {
     color: var(--primary-color);
-    font-size: 1.8rem;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 .user-info {
@@ -119,6 +174,7 @@ body {
 
 .user-name {
     margin-right: 15px;
+    font-weight: 500;
 }
 
 .user-avatar {
@@ -131,40 +187,56 @@ body {
     justify-content: center;
     color: var(--light-color);
     font-weight: bold;
+    box-shadow: var(--shadow-soft);
 }
 
-/* Panel Styles */
+/* =============================
+   PANEL SYSTEM - Consistent with admin.css
+   ============================= */
+
+/* Panel Base Styles */
 .panel {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-strong);
+    backdrop-filter: blur(10px);
     margin-bottom: 30px;
     display: none;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .panel.active {
     display: block;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .panel-header {
-    padding: 15px 20px;
+    padding: 20px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: var(--coffee-brown);
+    color: white;
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 }
 
 .panel-title {
-    font-size: 1.2rem;
-    color: var(--primary-color);
+    font-size: 1.4rem;
     font-weight: 600;
 }
 
 .panel-body {
-    padding: 20px;
+    padding: 30px;
+    background: white;
+    min-height: 200px; /* Adjusted min-height for general use */
 }
 
-/* Form Styles */
+/* =============================
+   FORM ELEMENTS - Consistent with admin.css
+   ============================= */
+
 .form-group {
     margin-bottom: 20px;
 }
@@ -173,180 +245,691 @@ body {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
+    color: var(--dark-color);
 }
 
 .form-control {
     width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius-md);
     font-size: 1rem;
-    transition: border-color 0.2s;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) inset;
 }
 
 .form-control:focus {
     border-color: var(--primary-color);
     outline: none;
+    box-shadow: 0 0 0 4px rgba(111, 78, 55, 0.15);
 }
 
 .form-row {
     display: flex;
     margin: 0 -10px;
+    flex-wrap: wrap;
 }
 
 .form-col {
     flex: 1;
     padding: 0 10px;
+    min-width: 280px;
 }
 
-/* Button Styles */
+/* =============================
+   BUTTON SYSTEM - Consistent with admin.css
+   ============================= */
+
 .btn {
-    display: inline-block;
-    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 28px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius-md);
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-soft);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
+    background: var(--gradient-primary);
     color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:hover {
-    background-color: #5d4125;
+    background: var(--gradient-secondary);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-soft);
 }
 
 .btn-secondary {
-    background-color: var(--secondary-color);
+    background: linear-gradient(135deg, var(--secondary-color), #b8976a);
     color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Added border for consistency */
 }
 
 .btn-secondary:hover {
-    background-color: #a88b6d;
+    background: linear-gradient(135deg, #a88b6d, var(--secondary-color));
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium); /* Added shadow for consistency */
 }
 
-.btn-danger {
-    background-color: var(--danger-color);
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #c9302c;
-}
-
+/* Tombol Edit dan Delete dalam Tabel */
 .btn-sm {
-    padding: 5px 10px;
-    font-size: 0.8rem;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: var(--border-radius-sm);
+    min-width: auto;
 }
 
-/* Table Styles */
+.btn-edit {
+    background: linear-gradient(135deg, var(--info-color), #2196f3);
+    color: white;
+    margin-right: 6px;
+    border: 1px solid rgba(91, 192, 222, 0.3);
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, var(--danger-color), #f44336);
+    color: white;
+    border: 1px solid rgba(217, 83, 79, 0.3);
+}
+
+.btn-edit:hover {
+    background: linear-gradient(135deg, #2196f3, var(--info-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, #f44336, var(--danger-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
+}
+
+.btn-edit:active,
+.btn-delete:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Ikon dalam tombol */
+.btn-edit i,
+.btn-delete i {
+    font-size: 0.9rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+/* Efek loading saat diklik */
+.btn-edit.loading i,
+.btn-delete.loading i {
+    display: none;
+}
+
+.btn-edit.loading::after,
+.btn-delete.loading::after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* =============================
+   TABLE SYSTEM - Consistent with admin.css
+   ============================= */
+
 .table-container {
     overflow-x: auto;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-medium);
+    margin-bottom: 30px;
+    border: 1px solid rgba(139, 69, 19, 0.1);
 }
 
 .data-table {
     width: 100%;
     border-collapse: collapse;
-}
-
-.data-table th,
-.data-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    font-size: 0.95rem;
 }
 
 .data-table th {
-    background-color: #f4f4f4;
-    font-weight: 600;
-    color: var(--primary-color);
+    background: var(--gradient-secondary);
+    color: white;
+    padding: 18px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+}
+
+.data-table th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--coffee-gold), transparent);
+}
+
+.data-table td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+    vertical-align: middle;
+    transition: background-color 0.2s ease;
 }
 
 .data-table tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
+    background: linear-gradient(135deg, #f8f4f0, #f5f1eb);
+    box-shadow: inset 0 0 0 1px rgba(139, 69, 19, 0.1);
 }
 
-.data-table .actions {
-    display: flex;
-    gap: 5px;
+.data-table tr:last-child td {
+    border-bottom: none;
 }
 
-/* File Upload */
+/* =============================
+   FILE UPLOAD STYLES - Consistent with admin.css
+   ============================= */
+
 .file-upload {
     border: 2px dashed #ddd;
-    padding: 20px;
+    padding: 30px;
     text-align: center;
-    border-radius: 6px;
+    border-radius: 10px;
     margin-bottom: 20px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
 }
 
 .file-upload:hover {
-    border-color: var(--primary-color);
+    border-color: var(--coffee-brown);
+    background: #f0f0f0;
 }
 
-.file-upload div {
-    margin-bottom: 10px;
+.file-upload p {
+    margin: 15px 0 0;
+    color: #666;
+    font-weight: 500;
 }
 
 .file-input {
     display: none;
 }
 
-/* Card styles */
-.card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
+.file-list {
+    margin-top: 20px;
 }
 
-/* Badge Styles */
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.dropzone {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border: 2px dashed var(--coffee-light);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.dropzone:hover {
+    border-color: var(--coffee-brown);
+    background: #f8f4f0;
+}
+
+/* =============================
+   BADGE SYSTEM - Consistent with admin.css
+   ============================= */
+
 .badge {
     display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
 }
 
 .badge-success {
-    background-color: rgba(92, 184, 92, 0.2);
-    color: var(--success-color);
+    background: linear-gradient(135deg, var(--success-color), #4caf50);
+    color: white;
+    border-color: rgba(92, 184, 92, 0.3);
 }
 
 .badge-warning {
-    background-color: rgba(240, 173, 78, 0.2);
-    color: var(--warning-color);
+    background: linear-gradient(135deg, var(--warning-color), #ff9800);
+    color: white;
+    border-color: rgba(240, 173, 78, 0.3);
+}
+
+.badge-danger {
+    background: linear-gradient(135deg, var(--danger-color), #f44336);
+    color: white;
+    border-color: rgba(217, 83, 79, 0.3);
 }
 
 .badge-info {
-    background-color: rgba(91, 192, 222, 0.2);
-    color: var(--info-color);
+    background: linear-gradient(135deg, var(--info-color), #2196f3);
+    color: white;
+    border-color: rgba(91, 192, 222, 0.3);
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .wrapper {
-        flex-direction: column;
+/* =============================
+   CARD & STATS STYLES - Consistent with admin.css
+   ============================= */
+
+.card {
+    background: white;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* =============================
+   RESPONSIVE DESIGN - Consistent with admin.css
+   ============================= */
+
+@media (max-width: 1200px) {
+    .container {
+        max-width: 95%;
     }
 
+    .panel-body {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 992px) {
     .sidebar {
         width: 100%;
-        min-height: auto;
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100%;
+        transition: left 0.3s ease;
     }
+    .sidebar.active {
+        left: 0;
+    }
+    .content {
+        margin-left: 0;
+    }
+    .header {
+        border-radius: var(--border-radius-md);
+    }
+}
 
-    .form-row {
-        flex-direction: column;
+@media (max-width: 768px) {
+    .panel-body {
+        padding: 20px;
     }
 
     .form-col {
+        min-width: 100%;
         padding: 0;
+    }
+
+    .data-table {
+        font-size: 0.85rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 12px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 10px;
+    }
+
+    .panel-header {
+        padding: 15px;
+    }
+
+    .panel-title {
+        font-size: 1.2rem;
+    }
+
+    .panel-body {
+        padding: 15px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 6px;
+        font-size: 0.8rem;
+    }
+}
+
+/* =============================
+   UTILITY CLASSES - Consistent with admin.css
+   ============================= */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 10px; }
+.mb-2 { margin-bottom: 20px; }
+.mb-3 { margin-bottom: 30px; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 10px; }
+.mt-2 { margin-top: 20px; }
+.mt-3 { margin-top: 30px; }
+
+.d-none { display: none; }
+.d-block { display: block; }
+.d-flex { display: flex; }
+.d-grid { display: grid; }
+
+.w-100 { width: 100%; }
+.h-100 { height: 100%; }
+
+.text-primary { color: var(--primary-color); }
+.text-secondary { color: var(--secondary-color); }
+.text-success { color: var(--success-color); }
+.text-danger { color: var(--danger-color); }
+.text-warning { color: var(--warning-color); }
+.text-info { color: var(--info-color); }
+
+/* =============================
+   ANIMATION & TRANSITIONS - Consistent with admin.css
+   ============================= */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+    50% { transform: translate(-50%, -50%) rotate(180deg); }
+}
+
+/* =============================
+   SCROLLBAR STYLING - Consistent with admin.css
+   ============================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--coffee-light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--coffee-brown);
+}
+
+/* Custom scrollbar for tables */
+.table-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--coffee-light);
+    border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--coffee-brown);
+}
+
+/* =============================
+   LOADING & SPINNER STYLES - Consistent with admin.css
+   ============================= */
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* @keyframes spin defined earlier */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.loading-content {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.loading-text {
+    margin-top: 15px;
+    color: var(--coffee-brown);
+    font-weight: 600;
+}
+
+/* =============================
+   FOCUS STYLES FOR ACCESSIBILITY - Consistent with admin.css
+   ============================= */
+
+.btn:focus,
+.form-control:focus,
+.menu-item:focus,
+.tab-button:focus, /* Not present in mitra.html, but good to include */
+.close-button:focus, /* Not present in mitra.html, but good to include */
+.dropdown-toggle:focus, /* Not present in mitra.html, but good to include */
+.pagination-btn:focus { /* Not present in mitra.html, but good to include */
+    outline: 3px solid rgba(139, 69, 19, 0.5);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+}
+
+/* =============================
+   DARK MODE SUPPORT - Consistent with admin.css
+   ============================= */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-color: #1a1a1a;
+        --dark-color: #f5f5f5;
+        --coffee-brown: #9b6d47;
+        --coffee-light: #e09f5a;
+        --coffee-dark: #4d3326;
+        --coffee-cream: #ffecc6;
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 100%);
+        color: var(--dark-color);
+    }
+
+    .panel,
+    .card,
+    .data-table,
+    .form-control,
+    .file-upload, /* Added for dark mode */
+    .loading-content {
+        background: #2a2a2a;
+        color: var(--dark-color);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .panel-header {
+        background: linear-gradient(120deg, var(--coffee-light) 0%, var(--coffee-brown) 100%);
+        border-bottom-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .data-table th {
+        background: #333;
+        border-bottom-color: #555;
+    }
+
+    .data-table td {
+        border-bottom-color: #444;
+    }
+
+    .data-table tr:hover {
+        background: #3a3a3a;
+    }
+
+    .form-control {
+        background: #333;
+        border-color: #555;
+        color: var(--dark-color);
+    }
+
+    .form-control:focus {
+        border-color: var(--coffee-light);
+        box-shadow: 0 0 0 4px rgba(224, 159, 90, 0.25);
+    }
+
+    /* Added for dark mode consistency */
+    .file-upload {
+        background: #333;
+        border-color: #555;
+    }
+    .file-upload p {
+        color: #ccc;
     }
 }

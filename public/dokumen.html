@@ -1,59 +1,122 @@
-<div class="panel-header">
-    <div class="panel-title">Upload Dokumen</div>
-</div>
 <div class="panel-body" style="background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:32px 24px;">
-
     <section style="margin-bottom:32px;">
-        <button class="btn btn-primary" id="tambah-dokumen" style="margin-bottom:16px;background:#805b36;">+ Tambah Dokumen</button>
+        <button class="btn btn-primary" id="tambah-dokumen-btn" style="margin-bottom:16px;">+ Tambah Dokumen</button>
+        
+        <!-- Admin Documents Section -->
+        <h4 style="margin-top: 24px; margin-bottom: 16px; color:#805b36;">Dokumen Diunggah Admin</h4>
         <div class="table-container">
-            <table class="data-table" id="tabel-upload-dokumen">
+            <table class="data-table" id="admin-documents-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nama Dokumen</th>
-                        <th>Upload Dokumen</th>
+                        <th>Judul Dokumen</th>
+                        <th>Tanggal Upload</th>
+                        <th>File Dokumen</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Contoh baris dummy, akan diisi otomatis via JS di backend sebenarnya -->
+                    <!-- Documents will be loaded here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mitra Documents Section -->
+        <h4 style="margin-top: 32px; margin-bottom: 16px; color:#805b36;">Dokumen Diunggah Mitra</h4>
+        <div class="table-container">
+            <table class="data-table" id="mitra-documents-table">
+                <thead>
                     <tr>
-                        <td>KP001</td>
-                        <td>Arabica Gayo</td>
-                        <td>
-                            <label class="dropzone">
-                                <input type="file" style="display:none;">
-                                <span style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#805b36;">
-                                    <span style="font-size:1.4em;">📁</span> Pilih file atau seret ke sini
-                                </span>
-                            </label>
-                        </td>
-                        <td style="display:flex;gap:6px;">
-                            <button class="btn btn-secondary btn-sm lihat-dokumen" style="background:#d8c2a5;color:#6e4e2e;">Lihat</button>
-                            <button class="btn btn-secondary btn-sm edit-dokumen" style="background:#f5e7d2;color:#6e4e2e;">Edit</button>
-                            <button class="btn btn-danger btn-sm hapus-dokumen" style="background:#c76c4e;color:#fff;">Hapus</button>
-                        </td>
+                        <th>Judul Dokumen</th>
+                        <th>Penerima</th>
+                        <th>Tanggal Upload</th>
+                        <th>File Dokumen</th>
+                        <th>Aksi</th>
                     </tr>
-                    <tr>
-                        <td>KP002</td>
-                        <td>Robusta Lampung</td>
-                        <td>
-                            <label class="dropzone">
-                                <input type="file" style="display:none;">
-                                <span style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#805b36;">
-                                    <span style="font-size:1.4em;">📁</span> Pilih file atau seret ke sini
-                                </span>
-                            </label>
-                        </td>
-                        <td style="display:flex;gap:6px;">
-                            <button class="btn btn-secondary btn-sm lihat-dokumen" style="background:#d8c2a5;color:#6e4e2e;">Lihat</button>
-                            <button class="btn btn-secondary btn-sm edit-dokumen" style="background:#f5e7d2;color:#6e4e2e;">Edit</button>
-                            <button class="btn btn-danger btn-sm hapus-dokumen" style="background:#c76c4e;color:#fff;">Hapus</button>
-                        </td>
-                    </tr>
-                    <!-- Baris dokumen baru bisa otomatis ditambah dengan JS -->
+                </thead>
+                <tbody>
+                    <!-- Documents will be loaded here via JavaScript -->
                 </tbody>
             </table>
         </div>
     </section>
+</div>
+
+<!-- Document Modal -->
+<div id="document-modal-backdrop" class="modal-backdrop">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="document-modal-title">Unggah Dokumen Baru</h3>
+            <span class="close-button" id="close-document-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="document-form" enctype="multipart/form-data">
+                <input type="hidden" id="document-id">
+                <div class="form-group">
+                    <label for="document-title">Judul Dokumen:</label>
+                    <input type="text" id="document-title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="document-description">Deskripsi:</label>
+                    <textarea id="document-description" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="document-file-input">File Dokumen:</label>
+                    <input type="file" id="document-file-input" class="form-control">
+                    <p id="current-document-file" style="margin-top: 10px;"></p>
+                    <input type="hidden" id="existing-document-dokumen">
+                </div>
+                <button type="submit" class="btn btn-primary" id="save-document-btn">Simpan</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-backdrop" id="edit-document-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Dokumen</h3>
+            <span class="close-button" onclick="closeEditModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="edit-document-form">
+                <input type="hidden" id="edit-document-id">
+                
+                <div class="form-group">
+                    <label for="edit-document-title">Judul Dokumen</label>
+                    <input type="text" class="form-control" id="edit-document-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-document-description">Deskripsi</label>
+                    <textarea class="form-control" id="edit-document-description" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <div id="current-file-info" style="margin-bottom: 10px;"></div>
+                    <label for="edit-document-file">Ubah File (Opsional)</label>
+                    <input type="file" class="form-control" id="edit-document-file" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    <small class="text-muted">Biarkan kosong jika tidak ingin mengubah file</small>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeEditModal()">Batal</button>
+            <button class="btn btn-primary" type="submit" form="edit-document-form">Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Message Modal -->
+<div id="message-modal" class="modal-backdrop">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Modal Title</h3>
+            <span class="close-button close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Modal message content</p>
+        </div>
+    </div>
 </div>

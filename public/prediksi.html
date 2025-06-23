@@ -8,9 +8,6 @@
                 <button class="tab-button" onclick="switchTab('prediksi')" role="tab" aria-selected="false" aria-controls="prediksi" id="tab-prediksi">
                     <span aria-hidden="true">📈</span> Prediksi
                 </button>
-                <button class="tab-button" onclick="switchTab('riwayat')" role="tab" aria-selected="false" aria-controls="riwayat" id="tab-riwayat">
-                    <span aria-hidden="true">📋</span> Riwayat Prediksi
-                </button>
             </div>
 
             <div class="tab-content">
@@ -55,32 +52,38 @@
                             </tbody>
                     </table>
 
-                    <div id="addSalesModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
-                        <div class="modal-content">
-                            <button class="close" onclick="closeAddSalesModal()" aria-label="Tutup modal">&times;</button>
-                            <h2 id="modalTitle">Tambah Data Penjualan</h2>
-                            <form id="addSalesForm">
-                                <div class="filter-group">
-                                    <label for="modalProduct">Produk:</label>
-                                    <select id="modalProduct" required>
-                                        </select>
-                                </div>
-                                <div class="filter-group">
-                                    <label for="modalDate">Tanggal Minggu:</label>
-                                    <input type="date" id="modalDate" required />
-                                </div>
-                                <div class="filter-group">
-                                    <label for="modalInitialStock">Stok Awal (kg):</label>
-                                    <input type="number" id="modalInitialStock" min="0" required />
-                                </div>
-                                <div class="filter-group">
-                                    <label for="modalSoldStock">Stok Terjual (kg):</label>
-                                    <input type="number" id="modalSoldStock" min="0" required />
-                                </div>
-                                <div style="text-align:right; margin-top: 20px;">
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
-                                </div>
-                            </form>
+                    <!-- Modal Tambah Data Penjualan - Struktur diperbarui -->
+                    <div id="addSalesModal" class="modal-backdrop"> <!-- Hapus style="display:none;" dan ganti class -->
+                        <div class="modal-content"> <!-- Ganti class="modal" menjadi class="modal-content" -->
+                            <div class="modal-header">
+                                <h3 id="modalTitle">Tambah Data Penjualan</h3> <!-- Ganti h2 menjadi h3 -->
+                                <span class="close-button" onclick="closeAddSalesModal()" aria-label="Tutup modal">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addSalesForm">
+                                    <div class="form-group">
+                                        <label for="modalProduct">Produk:</label>
+                                        <select id="modalProduct" class="form-control" required> <!-- Tambah class="form-control" -->
+                                            </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="modalDate">Tanggal Minggu:</label>
+                                        <input type="date" id="modalDate" class="form-control" required /> <!-- Tambah class="form-control" -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="modalInitialStock">Stok Awal (kg):</label>
+                                        <input type="number" id="modalInitialStock" class="form-control" min="0" required /> <!-- Tambah class="form-control" -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="modalSoldStock">Stok Terjual (kg):</label>
+                                        <input type="number" id="modalSoldStock" class="form-control" min="0" required /> <!-- Tambah class="form-control" -->
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer"> <!-- Pindahkan tombol ke modal-footer -->
+                                <button type="button" class="btn btn-secondary" onclick="closeAddSalesModal()">Batal</button>
+                                <button type="submit" class="btn btn-primary" form="addSalesForm">Simpan</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -90,7 +93,7 @@
                     <div class="filter-section">
                         <div class="filter-group">
                             <label for="predictionProduct">Pilih Produk:</label>
-                            <select id="predictionProduct" required>
+                            <select id="predictionProduct" class="form-control" required> <!-- Tambah class="form-control" -->
                                 <option value="">-- Pilih Produk --</option>
                                 </select>
                         </div>
@@ -146,13 +149,13 @@
                     <div class="filters" aria-label="Filter Riwayat Prediksi">
                         <div class="filter-group">
                             <label for="filterRiwayatProduk">Filter Produk:</label>
-                            <select id="filterRiwayatProduk" onchange="filterHistoryData()">
+                            <select id="filterRiwayatProduk" class="form-control" onchange="filterHistoryData()"> <!-- Tambah class="form-control" -->
                                 <option value="">Semua Produk</option>
                             </select>
                         </div>
                         <div class="filter-group">
                             <label for="filterStatus">Filter Status:</label>
-                            <select id="filterStatus" onchange="filterHistoryData()">
+                            <select id="filterStatus" class="form-control" onchange="filterHistoryData()"> <!-- Tambah class="form-control" -->
                                 <option value="">Semua Status</option>
                                 <option value="Akurat">Akurat</option>
                                 <option value="Cukup Akurat">Cukup Akurat</option>
@@ -189,29 +192,36 @@
     </div>
 </div>
 
-<div id="editSalesModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.2); align-items:center; justify-content:center;">
-  <div style="background:white; padding:28px; border-radius:12px; min-width:340px; box-shadow:0 2px 16px #0002;">
-    <div style="font-size:18px; font-weight:bold; margin-bottom:14px;">Edit Data Penjualan</div>
-    <form id="formEditSales">
-      <input type="hidden" id="editId" />
-      <input type="hidden" id="editProdukId">
-      <input type="hidden" id="editTanggalMinggu">
+<!-- Modal Edit Data Penjualan - Struktur diperbarui -->
+<div id="editSalesModal" class="modal-backdrop">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Edit Data Penjualan</h3> <!-- Tambah h3 -->
+      <span class="close-button" onclick="hideEditModal()">&times;</span> <!-- Ganti class dan onclick -->
+    </div>
+    <div class="modal-body">
+        <form id="formEditSales">
+            <input type="hidden" id="editId" />
+            <input type="hidden" id="editProdukId">
+            <input type="hidden" id="editTanggalMinggu">
 
-      <div class="form-group">
-        <label>Produk:</label>
-        <select id="editProduk" required disabled></select> </div>
-      <div class="form-group">
-        <label>Stok Awal (kg):</label>
-        <input type="number" id="editStokAwal" min="1" required />
-      </div>
-      <div class="form-group">
-        <label>Stok Terjual (kg):</label>
-        <input type="number" id="editStokTerjual" min="0" required />
-      </div>
-      <div style="text-align:right; margin-top:16px;">
+            <div class="form-group">
+                <label>Produk:</label>
+                <select id="editProduk" class="form-control" required disabled></select>
+            </div>
+            <div class="form-group">
+                <label>Stok Awal (kg):</label>
+                <input type="number" id="editStokAwal" class="form-control" min="1" required />
+            </div>
+            <div class="form-group">
+                <label>Stok Terjual (kg):</label>
+                <input type="number" id="editStokTerjual" class="form-control" min="0" required />
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer"> <!-- Pindahkan tombol ke modal-footer -->
         <button type="button" class="btn btn-secondary" onclick="hideEditModal()">Batal</button>
-        <button type="submit" class="btn btn-primary">Simpan</button>
-      </div>
-    </form>
+        <button type="submit" class="btn btn-primary" form="formEditSales">Simpan</button>
+    </div>
   </div>
 </div>

@@ -1,14 +1,27 @@
 // ===================== FUNGSI LOAD PANEL DINAMIS =====================
 async function loadContent(target, filename) {
+    console.log(`Memuat konten untuk panel: ${target}`);
+
     try {
         const response = await fetch(filename);
-        if (response.ok) {
-            const content = await response.text();
-            document.getElementById(target).innerHTML = content;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-            if (target === 'predictions') {
+        const content = await response.text();
+        const targetElement = document.getElementById(target);
+        
+        if (!targetElement) {
+            throw new Error(`Element dengan ID ${target} tidak ditemukan`);
+        }
+
+        targetElement.innerHTML = content;
+        console.log(`Konten untuk panel ${target} berhasil dimuat`);
+
+        // Handler untuk setiap jenis panel
+        const panelHandlers = {
+            async predictions() {
                 try {
-                    // Perbaiki path ke folder prediksi
                     await loadScripts([
                         './js/admin/prediksi/utils.js',
                         './js/admin/prediksi/sales.js',
@@ -17,42 +30,80 @@ async function loadContent(target, filename) {
                         './js/admin/prediksi/predict-main.js'
                     ]);
                     
-                    // Inisialisasi panel prediksi
-                    if (window.initPrediksiPanel) window.initPrediksiPanel();
+                    if (typeof window.initPrediksiPanel === 'function') {
+                        window.initPrediksiPanel();
+                    }
                 } catch (error) {
                     console.error('Gagal memuat modul prediksi:', error);
-                    showNotification('Gagal memuat modul prediksi', 'error');
+                    showPanelError(target, 'Gagal memuat modul prediksi');
                 }
-            }
+            },
 
-            // -- Produk: inisialisasi produk.js hanya setelah panel produk ter-load
-            if (target === 'products') {
-                import('./produk.js').then(m => {
-                    if (m.initProductManagement) m.initProductManagement();
-                });
-            }
-
-            // -- Mitra: panggil JS mitra hanya setelah panel mitra ter-load
-            if (target === 'partners') {
+            async products() {
                 try {
-                    import('./manage-mitra.js').then(() => {
-                        if (window.loadPendingMitra) window.loadPendingMitra();
-                    }).catch(() => {
-                        if (window.loadPendingMitra) window.loadPendingMitra();
-                    });
-                } catch {
-                    if (window.loadPendingMitra) window.loadPendingMitra();
+                    const module = await import('./produk.js');
+                    if (module?.initProductManagement) {
+                        module.initProductManagement();
+                    } else {
+                        console.warn('initProductManagement tidak ditemukan');
+                    }
+                } catch (error) {
+                    console.error('Gagal memuat modul produk:', error);
+                    showPanelError(target, 'Gagal memuat modul produk');
+                }
+            },
+
+            async partners() {
+                try {
+                    const module = await import('./manage-mitra.js');
+                    if (module?.loadPendingMitra) {
+                        module.loadPendingMitra();
+                    } else if (window.loadPendingMitra) {
+                        window.loadPendingMitra(); // Fallback
+                    }
+                } catch (error) {
+                    console.error('Gagal memuat modul mitra:', error);
+                    showPanelError(target, 'Gagal memuat modul mitra');
+                }
+            },
+
+            async documents() {
+                try {
+                    const module = await import('./dokumen.js');
+                    if (module?.initDocumentManagement) {
+                        module.initDocumentManagement();
+                    } else if (window.initDocumentManagement) {
+                        window.initDocumentManagement(); // Fallback
+                    }
+                } catch (error) {
+                    console.error('Gagal memuat modul dokumen:', error);
+                    showPanelError(target, 'Gagal memuat modul dokumen');
                 }
             }
-        } else {
-            document.getElementById(target).innerHTML = '<div class="error-message">Gagal memuat konten</div>';
+        };
+
+        // Jalankan handler jika ada
+        if (panelHandlers[target]) {
+            await panelHandlers[target]();
         }
+
     } catch (error) {
-        document.getElementById(target).innerHTML = '<div class="error-message">Terjadi kesalahan saat memuat konten</div>';
+        console.error(`Gagal memuat konten untuk panel ${target}:`, error);
+        showPanelError(target, 'Terjadi kesalahan saat memuat konten');
     }
 }
 
-// Fungsi untuk memuat beberapa script secara berurutan
+function showPanelError(panelId, message) {
+    const panel = document.getElementById(panelId);
+    if (panel) {
+        panel.innerHTML += `
+            <div class="alert alert-danger">
+                ${message}
+            </div>
+        `;
+    }
+}
+
 function loadScripts(scripts) {
     return new Promise((resolve, reject) => {
         let loaded = 0;
@@ -65,33 +116,34 @@ function loadScripts(scripts) {
             
             const script = document.createElement('script');
             script.src = scripts[loaded];
+            
             script.onload = () => {
                 loaded++;
                 loadNext();
             };
-            script.onerror = (err) => {
-                reject(`Gagal memuat script: ${scripts[loaded]}`);
+            
+            script.onerror = () => {
+                reject(new Error(`Gagal memuat script: ${scripts[loaded]}`));
             };
             
-            // UNCOMMENT BARIS INI
             document.head.appendChild(script);
         };
         
         loadNext();
     });
 }
+
 // ===================== INISIALISASI MENU & ROUTING PANEL =====================
 document.addEventListener('DOMContentLoaded', function() {
-    const menuItems = document.querySelectorAll('.menu-item[data-target]');
-    const panels = document.querySelectorAll('.panel');
-    const pageTitle = document.getElementById('page-title');
-
+    console.log('Admin panel initialized');
+    
     const contentMap = {
         'products': 'manage-product.html',
         'partners': 'manage-mitra.html',
         'predictions': 'prediksi.html',
         'documents': 'dokumen.html'
     };
+    
     const titleMap = {
         'dashboard': 'Dashboard',
         'products': 'Produk Kopi',
@@ -100,48 +152,58 @@ document.addEventListener('DOMContentLoaded', function() {
         'documents': 'Dokumen & Kontrak'
     };
 
-    // Otomatis aktifkan panel Prediksi Produk saat pertama kali halaman dibuka
-    (async function() {
-        const predMenu = document.querySelector('.menu-item[data-target="predictions"]');
-        const targetPanel = document.getElementById('predictions');
-        if (predMenu && targetPanel) {
-            // Set menu prediksi aktif
-            menuItems.forEach(mi => mi.classList.remove('active'));
-            predMenu.classList.add('active');
-
-            // Set judul halaman
-            if (pageTitle) pageTitle.textContent = titleMap['predictions'];
-
-            // Set panel prediksi aktif
-            panels.forEach(panel => panel.classList.remove('active'));
-            targetPanel.classList.add('active');
-
-            // Load konten prediksi (tabel, chart, dsb)
-            await loadContent('predictions', contentMap['predictions']);
+    // Inisialisasi panel default
+    async function initializeDefaultPanel() {
+        const defaultPanel = 'predictions';
+        const menuItem = document.querySelector(`.menu-item[data-target="${defaultPanel}"]`);
+        const panelElement = document.getElementById(defaultPanel);
+        
+        if (menuItem && panelElement) {
+            setActivePanel(menuItem, panelElement);
+            await loadContent(defaultPanel, contentMap[defaultPanel]);
         }
-    })();
+    }
 
-    menuItems.forEach(item => {
-        item.addEventListener('click', async function() {
-            const target = this.getAttribute('data-target');
-            // Switch tab aktif
-            menuItems.forEach(mi => mi.classList.remove('active'));
-            panels.forEach(panel => panel.classList.remove('active'));
-            this.classList.add('active');
-            if (pageTitle) pageTitle.textContent = titleMap[target] || 'Dashboard';
+    // Set panel aktif
+    function setActivePanel(menuItem, panelElement) {
+        // Reset semua aktif
+        document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        
+        // Set yang aktif
+        menuItem.classList.add('active');
+        panelElement.classList.add('active');
+        
+        // Update judul halaman
+        const pageTitle = document.getElementById('page-title');
+        if (pageTitle) {
+            const target = menuItem.getAttribute('data-target');
+            pageTitle.textContent = titleMap[target] || 'Dashboard';
+        }
+    }
 
-            const targetPanel = document.getElementById(target);
-            if (targetPanel) {
-                targetPanel.classList.add('active');
-                // Untuk panel dinamis (bukan dashboard), load HTML-nya
+    // Handle klik menu
+    function setupMenuListeners() {
+        document.querySelectorAll('.menu-item[data-target]').forEach(item => {
+            item.addEventListener('click', async function() {
+                const target = this.getAttribute('data-target');
+                const panel = document.getElementById(target);
+                
+                if (!panel) {
+                    console.error(`Panel ${target} tidak ditemukan`);
+                    return;
+                }
+                
+                setActivePanel(this, panel);
+                
                 if (target !== 'dashboard' && contentMap[target]) {
                     await loadContent(target, contentMap[target]);
-                    // Panel mitra, inisialisasi manual jika perlu
-                    if (target === 'partners' && window.loadPendingMitra) {
-                        window.loadPendingMitra();
-                    }
                 }
-            }
+            });
         });
-    });
+    }
+
+    // Jalankan inisialisasi
+    initializeDefaultPanel();
+    setupMenuListeners();
 });

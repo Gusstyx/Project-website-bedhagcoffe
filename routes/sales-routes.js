@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/mysql');
@@ -81,6 +82,7 @@ router.put('/:id', async (req, res) => {
     try {
         connection = await pool.getConnection();
         // Pastikan data yang diupdate tidak menyebabkan duplikat (opsional)
+        // Cek duplikasi produk_id dan tanggal_minggu untuk ID yang berbeda
         const [exist] = await connection.query(
             'SELECT id FROM sales WHERE produk_id=? AND tanggal_minggu=? AND id <> ?',
             [produk_id, tanggal_minggu, id]
@@ -100,12 +102,13 @@ router.put('/:id', async (req, res) => {
         }
         res.json({ success: true, message: 'Data berhasil diperbarui' });
     } catch (e) {
+        // --- TAMBAHAN: LOG ERROR LEBIH DETAIL KE KONSOL SERVER ---
+        console.error('Error saat memperbarui data penjualan:', e); 
         res.status(500).json({ success: false, message: e.message });
     } finally {
         if (connection) connection.release();
     }
 });
-
 
 // ================ HAPUS DATA PENJUALAN ================
 // DELETE /api/sales/:id
