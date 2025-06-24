@@ -5,46 +5,34 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db/mysql');
 
-// Middleware otentikasi sementara (hardcoded untuk testing)
-function authenticateMitra(req, res, next) {
-    if (!req.session || !req.session.userId || req.session.userRole !== 'mitra') {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
 
-    // Simpan ke req.user agar bisa diakses di route
-    req.user = {
-        id: req.session.userId,
-        role: req.session.userRole,
-        email: req.session.email
-    };
-
-    next();
-    }
-
-// GET data mitra login
-// GET data mitra login
-// routes/mitra-routes.js
 router.get('/me', async (req, res) => {
-  if (!req.session || !req.session.userId || req.session.userRole !== 'mitra') {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
+    console.log("Session:", req.session);
 
-  const id = req.session.userId;
-  let connection;
-  try {
-    connection = await pool.getConnection();
-    const [rows] = await connection.query(
-      'SELECT id, name, email, status FROM users WHERE id = ? AND role = "mitra"',
-      [id]
-    );
-    if (rows.length > 0) res.json(rows[0]);
-    else res.status(404).json({ message: 'Mitra tidak ditemukan.' });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ message: 'Server error.' });
-  } finally {
-    if (connection) connection.release();
-  }
+    if (!req.session.userId || req.session.userRole !== 'mitra') {
+        return res.status(401).json({ message: 'Unauthorized: Role bukan mitra atau belum login' });
+    }
+
+    try {
+        const [rows] = await pool.query(
+            'SELECT name, email FROM users WHERE id = ? AND role = "mitra"',
+            [req.session.userId]
+        );
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Data mitra tidak ditemukan' });
+        }
+        
+        // Mengambil data pertama dari hasil query
+        const mitra = rows[0];
+        res.json({
+            name: mitra.name,
+            email: mitra.email
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
 

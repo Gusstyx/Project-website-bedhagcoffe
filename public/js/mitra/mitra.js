@@ -1,7 +1,3 @@
-// ========================
-// FILE: public/js/mitra.js
-// ========================
-
 // --------- LOGOUT (AJAX + SweetAlert2) -----------
 function logout() {
     Swal.fire({
@@ -107,31 +103,229 @@ function initFileUploads() {
 
 // --------- FETCH MITRA DATA ----------
 async function fetchMitraData() {
-try {
-    const response = await fetch('/api/mitra/me');
-    if (!response.ok) {
-        Swal.fire('Gagal', 'Gagal memuat data mitra', 'error');
+    try {
+        const response = await fetch('/api/mitra/me', {
+            credentials: 'include', // Wajib untuk mengirim cookie
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const mitra = await response.json();
+        // Perbaikan: Menggunakan id yang sesuai dengan HTML
+        document.getElementById('mitra-username').textContent = mitra.name || '-';
+        document.getElementById('mitra-email').textContent = mitra.email || '-';
+
+    } catch (error) {
+        console.error('Error:', error);
+        const errorEl = document.getElementById('error-message');
+        if (errorEl) errorEl.textContent = 'Gagal memuat data. Silakan coba lagi.';
+    }
+}
+
+
+async function loadMitradocument() {
+    const tbody = document.querySelector('#mitra-dokumen-table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+
+    try {
+        const res = await fetch('/api/dokumen', { credentials: 'include' });
+        const result = await res.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+            throw new Error('Data tidak valid');
+        }
+
+        const data = result.data;
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4">Tidak ada dokumen</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+        data.forEach(d => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${d.judul}</td>
+                    <td>
+                    <a href="${d.dokumen}" target="_blank" download class="btn btn-sm btn-outline-primary">Unduh</a>
+                    </td>
+                    <td>${new Date(d.tanggal_upload).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewDokumen(${d.id})">Lihat</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+    } catch (e) {
+        console.error(e);
+        tbody.innerHTML = '<tr><td colspan="4">Gagal load data dokumen</td></tr>';
+    }
+}
+
+async function viewDokumen(id) {
+    try {
+        const res = await fetch(`/api/dokumen/${id}`, { credentials: 'include' });
+        const result = await res.json();
+
+        if (!result.success) {
+            throw new Error(result.error || 'Dokumen tidak ditemukan');
+        }
+
+        const dokumenUrl = result.data.dokumen;
+
+        // Buka dokumen di tab baru
+        window.open(dokumenUrl, '_blank');
+
+    } catch (err) {
+        console.error(err);
+        Swal.fire('Gagal', 'Tidak dapat membuka dokumen', 'error');
+    }
+}
+
+async function loadUploadTable() {
+    const tbody = document.querySelector('#mitra-upload-table tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+
+    try {
+        const res = await fetch('/api/dokumen', { credentials: 'include' });
+        const result = await res.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+            throw new Error('Data tidak valid');
+        }
+
+        const data = result.data;
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">Tidak ada dokumen dari admin</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+        data.forEach(doc => {
+            const dokumenId = doc.id;
+            const dokumenJudul = doc.judul;
+
+            tbody.innerHTML += `
+                <tr data-id="${dokumenId}">
+                    <td>${dokumenJudul}</td>
+                    <td>
+                        <div class="file-upload" onclick="this.querySelector('input').click()">
+                            <div>📁 Pilih file atau seret ke sini</div>
+                            <input type="file" class="file-input" data-dokumen-id="${dokumenId}" style="display: none;">
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="submitUpload(this, ${dokumenId})">Upload</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        initDragAndDrop(); // Aktifkan fitur drag & drop
+
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="3">Gagal memuat data</td></tr>';
+    }
+}
+
+function initDragAndDrop() {
+    document.querySelectorAll('.file-upload').forEach(upload => {
+        const input = upload.querySelector('input');
+
+        upload.addEventListener('dragover', e => {
+            e.preventDefault();
+            upload.style.borderColor = '#007bff';
+        });
+
+        upload.addEventListener('dragleave', () => {
+            upload.style.borderColor = '#ddd';
+        });
+
+        upload.addEventListener('drop', e => {
+            e.preventDefault();
+            upload.style.borderColor = '#ddd';
+            if (e.dataTransfer.files.length) {
+                input.files = e.dataTransfer.files;
+                showFileName(upload, input.files[0].name);
+            }
+        });
+
+        input.addEventListener('change', () => {
+            if (input.files.length) {
+                showFileName(upload, input.files[0].name);
+            }
+        });
+    });
+}
+
+function showFileName(container, filename) {
+    let info = container.querySelector('.file-info');
+    if (!info) {
+        info = document.createElement('div');
+        info.className = 'file-info';
+        container.appendChild(info);
+    }
+    info.textContent = filename;
+}
+
+async function submitUpload(button, dokumenId) {
+    const row = button.closest('tr');
+    const input = row.querySelector('input[type="file"]');
+    const file = input?.files?.[0];
+
+    if (!file) {
+        Swal.fire('Pilih File', 'Silakan pilih dokumen yang akan diunggah.', 'warning');
         return;
     }
 
-    const mitra = await response.json();
+    const formData = new FormData();
+    formData.append('dokumenFile', file);
+    formData.append('dokumen_id', dokumenId);
 
-    // Tampilkan data ke elemen teks
-    document.getElementById('mitra-name').innerText = mitra.name || '-';
-    document.getElementById('mitra-email').innerText = mitra.email || '-';
+    try {
+        const response = await fetch('/api/mitra-dokumen/upload', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
 
-    // Update header jika perlu
-    document.querySelector('.user-name').textContent = mitra.name || 'Mitra';
-    document.querySelector('.user-avatar').textContent = mitra.name ? mitra.name.charAt(0).toUpperCase() : 'M';
+        // Handle error: jika server membalas HTML (bukan JSON)
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(`Respon bukan JSON: ${text.slice(0, 100)}...`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            Swal.fire('Sukses', 'Dokumen berhasil diunggah!', 'success');
+        } else {
+            throw new Error(result.message || 'Gagal upload');
+        }
     } catch (err) {
-        console.error('Error:', err);
-        Swal.fire('Error', 'Tidak dapat menghubungi server.', 'error');
+        console.error('Upload error:', err);
+        Swal.fire('Gagal', err.message || 'Tidak bisa mengunggah dokumen', 'error');
     }
 }
+
+
 
 // --------- INITIALIZE WHEN DOM READY ----------
 document.addEventListener('DOMContentLoaded', () => {
     initPanelNavigation();
     initFileUploads();
-    fetchMitraData();
+    fetchMitraData(); 
+    loadUploadTable();
+    loadMitradocument();
 });

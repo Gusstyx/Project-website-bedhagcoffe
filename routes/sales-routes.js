@@ -81,8 +81,6 @@ router.put('/:id', async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        // Pastikan data yang diupdate tidak menyebabkan duplikat (opsional)
-        // Cek duplikasi produk_id dan tanggal_minggu untuk ID yang berbeda
         const [exist] = await connection.query(
             'SELECT id FROM sales WHERE produk_id=? AND tanggal_minggu=? AND id <> ?',
             [produk_id, tanggal_minggu, id]

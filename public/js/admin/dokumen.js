@@ -125,7 +125,7 @@ export function initDocumentManagement() {
             }
         };
     }
-    // ====== Elemen DOM ======
+    // ====== Elemen DOM ======z
     const addBtn = document.getElementById('tambah-dokumen-btn');
     const form = document.getElementById('document-form');
     const docCloseBtn = document.getElementById('close-document-modal');

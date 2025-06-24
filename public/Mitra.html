@@ -47,23 +47,19 @@
                     <div class="user-name">Mitra</div>
                 </div>
             </div>
-
             <!-- Dashboard Panel -->
             <div class="panel active" id="dashboard">
-                <div class="panel active" id="dashboard">
-                    <div class="card">
-                        <h3>Profil Mitra</h3>
-                        <div class="form-group">
-                            <label class="form-label">Nama Pengguna</label>
-                            <p class="form-static" id="mitra-username"></p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <p class="form-static" id="mitra-email"></p>
-                        </div>
+                <div class="card">
+                    <h3>Profil Mitra</h3>
+                    <div class="form-group">
+                        <label class="form-label">Nama Pengguna</label>
+                        <p class="form-static" id="mitra-username"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <p class="form-static" id="mitra-email"></p>
                     </div>
                 </div>
-
                 <div class="panel-header">
                     <div class="panel-title">Notifikasi</div>
                 </div>
@@ -93,42 +89,15 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-container">
-                        <table class="data-table">
+                        <table class="data-table" id="mitra-upload-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nama Dokumen</th>
                                     <th>Upload Dokumen</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>KP001</td>
-                                    <td>Arabica Gayo</td>
-                                    <td>
-                                        <div class="file-upload">
-                                            <div>📁 Pilih file atau seret ke sini</div>
-                                            <input type="file" class="file-input">
-                                        </div>
-                                    </td>
-                                    <td class="actions">
-                                        <button type="submit" class="btn btn-primary btn-sm">Upload</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>KP002</td>
-                                    <td>Robusta Lampung</td>
-                                    <td>
-                                        <div class="file-upload">
-                                            <div>📁 Pilih file atau seret ke sini</div>
-                                            <input type="file" class="file-input">
-                                        </div>
-                                    </td>
-                                    <td class="actions">
-                                        <button class="btn btn-primary btn-sm">Upload</button>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -142,50 +111,22 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-container">
-                        <table class="data-table">
+                        <table class="data-table" id="mitra-dokumen-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nama Dokumen</th>
-                                    <th>Mitra Terkait</th>
+                                    <th>Dokumen</th>
                                     <th>Tanggal Unggah</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>DOC001</td>
-                                    <td>Kontrak Kerjasama Kopi Nusantara</td>
-                                    <td>Kopi Nusantara</td>
-                                    <td>15 Mei 2025</td>
-                                    <td class="actions">
-                                        <button class="btn btn-secondary btn-sm">Lihat</button>
-                                        <button class="btn btn-secondary btn-sm">Edit</button>
-                                        <button class="btn btn-danger btn-sm">Hapus</button>
-                                        <button class="btn btn-secondary btn-sm">Download</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>DOC002</td>
-                                    <td>MoU Java Bean</td>
-                                    <td>Java Bean</td>
-                                    <td>10 Mei 2025</td>
-                                    <td class="actions">
-                                        <button class="btn btn-secondary btn-sm">Lihat</button>
-                                        <button class="btn btn-secondary btn-sm">Edit</button>
-                                        <button class="btn btn-danger btn-sm">Hapus</button>
-                                        <button class="btn btn-secondary btn-sm">Download</button>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-
     <script src="/js/mitra/mitra.js"></script>
 </body>
 </html>

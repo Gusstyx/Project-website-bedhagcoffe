@@ -64,33 +64,33 @@ function handleMulterError(err, req, res, next) {
 router.get('/', authenticateUser, async (req, res) => {
     let connection;
     try {
-    connection = await pool.getConnection();
-    let query = `
-        SELECT d.id, d.judul, d.deskripsi, d.dokumen, d.tanggal_upload, 
-            u.name AS pengirim_nama, u.role AS pengirim_role, u.id AS pengirim_id
-        FROM dokumen d
-        JOIN users u ON d.pengirim_id = u.id
-    `;
-    const params = [];
+        connection = await pool.getConnection();
+        let query = `
+            SELECT d.id, d.judul, d.dokumen, d.tanggal_upload, 
+                u.name AS pengirim_nama, u.role AS pengirim_role, u.id AS pengirim_id
+            FROM dokumen d
+            JOIN users u ON d.pengirim_id = u.id
+        `;
+        const params = [];
 
-    if (req.user.role === 'mitra') {
-        query += ' WHERE d.pengirim_id = ?';
-        params.push(req.user.id);
-    }
+        if (req.user.role === 'mitra') {
+            query += ' WHERE d.pengirim_id = ?';
+            params.push(req.user.id);
+        }
 
-    query += ' ORDER BY d.tanggal_upload DESC';
-    const [rows] = await connection.query(query, params);
+        query += ' ORDER BY d.tanggal_upload DESC';
+        const [rows] = await connection.query(query, params);
 
-    const data = rows.map((doc) => ({
-        ...doc,
-        dokumen: `/uploads/dokumen/${path.basename(doc.dokumen)}`,
-    }));
+        const data = rows.map((doc) => ({
+            ...doc,
+            dokumen: `/uploads/dokumen/${path.basename(doc.dokumen)}`,
+        }));
 
-    res.json({ success: true, data });
+        res.json({ success: true, data });
     } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch documents' });
+        res.status(500).json({ error: 'Failed to fetch documents' });
     } finally {
-    if (connection) connection.release();
+        if (connection) connection.release();
     }
 });
 
@@ -102,7 +102,7 @@ router.get('/:id', authenticateUser, async (req, res) => {
     try {
         connection = await pool.getConnection();
         const [rows] = await connection.query(
-            `SELECT d.id, d.judul, d.deskripsi, d.dokumen AS dokumen,
+            `SELECT d.id, d.judul, d.dokumen AS dokumen,
              d.pengirim_id, d.tanggal_upload, u.name AS pengirim_nama
              FROM dokumen d
              JOIN users u ON d.pengirim_id = u.id
@@ -149,7 +149,7 @@ router.post('/', authenticateUser, upload.single('dokumenFile'), handleMulterErr
         });
     }
 
-    const { judul, deskripsi } = req.body;
+    const { judul } = req.body;
     const pengirimId = req.user.id;
     const dokumenPath = `/uploads/dokumen/${req.file.filename}`;
 
@@ -166,9 +166,9 @@ router.post('/', authenticateUser, upload.single('dokumenFile'), handleMulterErr
         connection = await pool.getConnection();
         const [result] = await connection.query(
             `INSERT INTO dokumen 
-             (judul, deskripsi, dokumen, pengirim_id, tanggal_upload)
-             VALUES (?, ?, ?, ?, NOW())`,
-            [judul, deskripsi || '', dokumenPath, pengirimId]
+             (judul, dokumen, pengirim_id, tanggal_upload)
+             VALUES (?, ?, ?, NOW())`,
+            [judul, dokumenPath, pengirimId]
         );
 
         res.status(201).json({
@@ -176,7 +176,6 @@ router.post('/', authenticateUser, upload.single('dokumenFile'), handleMulterErr
             data: {
                 id: result.insertId,
                 judul,
-                deskripsi,
                 dokumen: dokumenPath,
                 tanggal_upload: new Date().toISOString(),
                 pengirim_id: pengirimId
@@ -197,7 +196,7 @@ router.post('/', authenticateUser, upload.single('dokumenFile'), handleMulterErr
 // Update document
 router.put('/:id', authenticateUser, async (req, res) => {
     const { id } = req.params;
-    const { judul, deskripsi } = req.body;
+    const { judul } = req.body;
     const userId = req.user.id;
 
     let connection;
@@ -225,8 +224,8 @@ router.put('/:id', authenticateUser, async (req, res) => {
         }
 
         await connection.query(
-            'UPDATE dokumen SET judul = ?, deskripsi = ? WHERE id = ?',
-            [judul, deskripsi || '', id]
+            'UPDATE dokumen SET judul = ? WHERE id = ?',
+            [judul, id]
         );
 
         res.json({ 
